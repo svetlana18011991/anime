@@ -375,7 +375,7 @@
             const img = new Image();
             img.onload = function() {
                 const canvas = document.createElement('canvas');
-                // Сильное сжатие, чтобы код пролез в Genially (400px максимум)
+                // Сжимаем картинку, чтобы код не превышал лимиты Genially
                 const MAX_WIDTH = 400; 
                 let width = img.width;
                 let height = img.height;
@@ -384,7 +384,6 @@
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, width, height);
                 
-                // Качество 0.7 для JPEG/WEBP или стандартное для PNG
                 currentImageSrc = canvas.toDataURL(file.type === 'image/png' ? 'image/png' : 'image/jpeg', 0.7);
                 previewElement.src = currentImageSrc;
                 
@@ -493,28 +492,39 @@
         const glowFilter = glowToggle.checked ? `filter: drop-shadow(0 0 ${glowRadius.value}px ${glowColor.value});` : '';
         const timings = `--animate-duration: ${animDuration.value}s; --animate-delay: ${animDelay.value}s;`;
         
-        // ВАЖНО: Используем @import вместо <link>, чтобы Genially не ругался
-        let htmlSnippet = `<style>\n  @import url('https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css');\n`;
-        htmlSnippet += `  .gen-img { width: ${scale * 100}%; cursor: pointer; ${glowFilter} ${timings} }\n`;
+        // ВАЖНО: Формируем внутренний HTML
+        let innerHTML = `
+            <style>
+                @import url('https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css');
+                body { margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; width: 100vw; height: 100vh; background: transparent; overflow: hidden; }
+                .gen-img { transform: scale(${scale}); max-width: 100%; max-height: 100%; object-fit: contain; cursor: pointer; ${glowFilter} ${timings} }
+        `;
 
         if (trigger === 'hover') {
-            htmlSnippet += `  .gen-wrap:hover .gen-img { animation: ${animName} ${animDuration.value}s ease ${animDelay.value}s forwards; }\n`;
+            innerHTML += ` body:hover .gen-img { animation: ${animName} ${animDuration.value}s ease ${animDelay.value}s forwards; }\n`;
         }
-        htmlSnippet += `</style>\n`;
-
-        htmlSnippet += `<div class="gen-wrap" style="text-align: center; display: flex; justify-content: center; align-items: center; width: 100%; height: 100%;">\n`;
+        innerHTML += `</style>\n`;
 
         if (trigger === 'entrance') {
-            htmlSnippet += `  <img src="${currentImageSrc}" class="gen-img animate__animated animate__${animName} animate__delay-${animDelay.value}s" style="animation-duration: ${animDuration.value}s;" />\n`;
+            innerHTML += `<img src="${currentImageSrc}" class="gen-img animate__animated animate__${animName}" />\n`;
         } else if (trigger === 'infinite') {
-            htmlSnippet += `  <img src="${currentImageSrc}" class="gen-img animate__animated animate__${animName} animate__infinite" style="animation-duration: ${animDuration.value}s; animation-delay: ${animDelay.value}s;" />\n`;
+            innerHTML += `<img src="${currentImageSrc}" class="gen-img animate__animated animate__${animName} animate__infinite" />\n`;
         } else if (trigger === 'hover') {
-            htmlSnippet += `  <img src="${currentImageSrc}" class="gen-img animate__animated" />\n`;
+            innerHTML += `<img src="${currentImageSrc}" class="gen-img animate__animated" />\n`;
         } else if (trigger === 'click') {
-            htmlSnippet += `  <img src="${currentImageSrc}" class="gen-img" onclick="this.classList.remove('animate__animated', 'animate__${animName}'); void this.offsetWidth; this.classList.add('animate__animated', 'animate__${animName}');" style="animation-duration: ${animDuration.value}s; animation-delay: ${animDelay.value}s;" />\n`;
+            innerHTML += `<img src="${currentImageSrc}" class="gen-img" onclick="this.classList.remove('animate__animated', 'animate__${animName}'); void this.offsetWidth; this.classList.add('animate__animated', 'animate__${animName}');" />\n`;
         }
 
-        htmlSnippet += `</div>`;
+        // Волшебство: Экранируем символы, чтобы вставить код внутрь атрибута srcdoc у iframe
+        const escapedHTML = innerHTML
+            .replace(/&/g, "&amp;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#39;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+
+        // Оборачиваем всё в iframe! Genially это обожает.
+        let htmlSnippet = `<iframe style="width: 100%; height: 100%; border: none; background: transparent;" allowtransparency="true" srcdoc="${escapedHTML}"></iframe>`;
 
         codeOutput.value = htmlSnippet;
         codeModal.style.display = 'flex';

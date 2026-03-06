@@ -1,18 +1,21 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Редактор анимаций для Genially</title>
+    <title>Neon Genially Animator</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <style>
         :root {
-            --primary-color: #4CAF50;
-            --bg-color: #f4f7f6;
-            --panel-bg: #ffffff;
-            --text-color: #333;
+            --primary-color: #ff6600; /* Неоновый оранжевый */
+            --primary-hover: #ff8533;
+            --bg-color: #121212; /* Темный фон */
+            --panel-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+            --neon-glow: 0 0 15px rgba(255, 102, 0, 0.4);
+            --neon-border: 1px solid var(--primary-color);
         }
+        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-color);
@@ -20,107 +23,205 @@
             margin: 0;
             display: flex;
             height: 100vh;
+            overflow: hidden;
         }
+
+        /* Скроллбар для темной темы */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-color); }
+        ::-webkit-scrollbar-thumb { background: var(--primary-color); border-radius: 4px; }
+
         .container {
             display: flex;
             width: 100%;
             padding: 20px;
             gap: 20px;
+            height: calc(100vh - 40px);
         }
+
         /* Левая панель - Настройки */
         .settings {
             flex: 1;
             background: var(--panel-bg);
             padding: 25px;
             border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border: var(--neon-border);
+            box-shadow: var(--neon-glow);
             display: flex;
             flex-direction: column;
-            gap: 20px;
-            max-width: 400px;
+            gap: 15px;
+            max-width: 450px;
             overflow-y: auto;
         }
-        .settings h2 { margin-top: 0; font-size: 20px; }
-        .form-group { display: flex; flex-direction: column; gap: 8px; }
-        label { font-weight: bold; font-size: 14px; }
-        input[type="file"], select, input[type="color"] {
+
+        .settings h2 { 
+            margin-top: 0; 
+            font-size: 22px; 
+            color: var(--primary-color);
+            text-shadow: 0 0 8px rgba(255, 102, 0, 0.5);
+        }
+
+        .form-group { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 5px; 
+            background: rgba(255,255,255,0.03);
             padding: 10px;
-            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        label { font-weight: bold; font-size: 13px; color: #aaa; }
+        
+        input[type="file"], input[type="text"], select, input[type="color"] {
+            padding: 8px;
+            background: #2a2a2a;
+            color: white;
+            border: 1px solid #444;
             border-radius: 6px;
             width: 100%;
             box-sizing: border-box;
+            transition: border 0.3s;
         }
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        
+        input[type="text"]:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 5px rgba(255, 102, 0, 0.3);
         }
-        input[type="checkbox"] { width: 18px; height: 18px; }
+
+        /* Ползунки */
+        input[type="range"] {
+            accent-color: var(--primary-color);
+            width: 100%;
+        }
+        .range-header { display: flex; justify-content: space-between; align-items: center; }
+        .range-value { color: var(--primary-color); font-weight: bold; }
+
+        /* Радио кнопки для источника картинки */
+        .radio-group { display: flex; gap: 15px; margin-bottom: 5px; }
+        .radio-group label { color: var(--text-color); cursor: pointer; display: flex; align-items: center; gap: 5px;}
+        input[type="radio"] { accent-color: var(--primary-color); }
+
+        .checkbox-group { display: flex; align-items: center; gap: 10px; }
+        input[type="checkbox"] { accent-color: var(--primary-color); width: 16px; height: 16px; }
+
+        .button-group { display: flex; gap: 10px; margin-top: 10px; }
+        
         button {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
+            flex: 1;
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
             padding: 12px;
             border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 16px;
-            transition: background 0.3s;
-            margin-top: 10px;
+            font-size: 14px;
+            transition: all 0.3s;
+            text-transform: uppercase;
         }
-        button:hover { background-color: #45a049; }
+        button:hover { 
+            background-color: var(--primary-color); 
+            color: #fff;
+            box-shadow: var(--neon-glow);
+        }
         
+        button.primary-btn {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+        button.primary-btn:hover {
+            background-color: var(--primary-hover);
+        }
+
         /* Правая панель - Превью */
         .preview-area {
             flex: 2;
-            background: var(--panel-bg);
+            background: #181818;
             border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border: var(--neon-border);
+            box-shadow: var(--neon-glow);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             position: relative;
-            background-image: radial-gradient(#ddd 1px, transparent 1px);
+            background-image: radial-gradient(#333 1px, transparent 1px);
             background-size: 20px 20px;
+            transition: background-color 0.3s;
         }
+        
+        .preview-area.dragover {
+            background-color: rgba(255, 102, 0, 0.1);
+            border: 2px dashed var(--primary-color);
+        }
+
         .preview-header {
             position: absolute;
             top: 20px;
             left: 20px;
-            background: rgba(255,255,255,0.8);
-            padding: 5px 10px;
+            background: rgba(30, 30, 30, 0.9);
+            color: var(--primary-color);
+            padding: 5px 12px;
             border-radius: 5px;
             font-weight: bold;
+            border: 1px solid var(--primary-color);
+            box-shadow: 0 0 10px rgba(255, 102, 0, 0.2);
         }
+
+        .drag-text {
+            position: absolute;
+            bottom: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        #preview-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+
         #preview-element {
             max-width: 80%;
             max-height: 80%;
-            transition: filter 0.3s;
+            transition: filter 0.3s, transform 0.3s;
+            transform-origin: center;
         }
         
-        /* Модальное окно для кода */
+        /* Модальное окно */
         #code-modal {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.8);
             align-items: center; justify-content: center;
+            z-index: 1000;
         }
         .modal-content {
-            background: white;
-            padding: 20px;
+            background: var(--panel-bg);
+            border: var(--neon-border);
+            box-shadow: var(--neon-glow);
+            padding: 25px;
             border-radius: 12px;
             width: 600px;
             max-width: 90%;
+            color: white;
         }
         textarea {
             width: 100%;
             height: 200px;
-            margin: 10px 0;
+            margin: 15px 0;
             font-family: monospace;
             padding: 10px;
+            background: #121212;
+            color: #00ff00; /* Цвет кода как в терминале */
+            border: 1px solid #444;
+            border-radius: 6px;
             box-sizing: border-box;
+            resize: none;
         }
     </style>
 </head>
@@ -128,15 +229,20 @@
 
 <div class="container">
     <div class="settings">
-        <h2>Настройки анимации</h2>
+        <h2>NEON ANIMATOR</h2>
         
         <div class="form-group">
-            <label>1. Загрузите картинку</label>
-            <input type="file" id="image-upload" accept="image/png, image/jpeg, image/gif, image/webp">
+            <label>1. Источник изображения</label>
+            <div class="radio-group">
+                <label><input type="radio" name="img-source" value="file" checked> Файл</label>
+                <label><input type="radio" name="img-source" value="url"> Ссылка (URL)</label>
+            </div>
+            <input type="file" id="image-upload" accept="image/*">
+            <input type="text" id="image-url" placeholder="Вставьте ссылку на картинку" style="display: none;">
         </div>
 
         <div class="form-group">
-            <label>2. Триггер (когда анимация сработает?)</label>
+            <label>2. Триггер анимации</label>
             <select id="trigger-select">
                 <option value="entrance">При появлении</option>
                 <option value="hover">При наведении мыши</option>
@@ -154,7 +260,6 @@
                 <option value="shakeX">Shake (Тряска)</option>
                 <option value="tada">Tada (Та-дам!)</option>
                 <option value="wobble">Wobble (Качение)</option>
-                <option value="jello">Jello (Желе)</option>
                 <option value="heartBeat">HeartBeat (Сердцебиение)</option>
                 <option value="fadeIn">Fade In (Плавное появление)</option>
                 <option value="zoomIn">Zoom In (Увеличение)</option>
@@ -163,110 +268,211 @@
                 <option value="rotateIn">Rotate In (Вращение)</option>
                 <option value="lightSpeedInRight">Light Speed (Быстрый выезд)</option>
                 <option value="hinge">Hinge (Отрыв и падение)</option>
+                <option value="zoomOut">Zoom Out (Исчезновение)</option>
             </select>
         </div>
 
-        <div class="form-group checkbox-group">
-            <input type="checkbox" id="glow-toggle">
-            <label for="glow-toggle">Добавить свечение</label>
+        <div class="form-group">
+            <div class="range-header">
+                <label>Длительность (сек):</label>
+                <span class="range-value" id="duration-val">1s</span>
+            </div>
+            <input type="range" id="anim-duration" min="0.1" max="5" step="0.1" value="1">
+            
+            <div class="range-header" style="margin-top: 10px;">
+                <label>Задержка старта (сек):</label>
+                <span class="range-value" id="delay-val">0s</span>
+            </div>
+            <input type="range" id="anim-delay" min="0" max="5" step="0.1" value="0">
         </div>
 
-        <div class="form-group" id="glow-color-group" style="display: none;">
-            <label>Цвет свечения</label>
-            <input type="color" id="glow-color" value="#ffd700">
+        <div class="form-group">
+            <div class="range-header">
+                <label>Масштаб картинки (%):</label>
+                <span class="range-value" id="scale-val">100%</span>
+            </div>
+            <input type="range" id="img-scale" min="10" max="200" step="5" value="100">
         </div>
 
-        <button id="copy-btn">СКОПИРОВАТЬ КОД</button>
+        <div class="form-group">
+            <div class="checkbox-group">
+                <input type="checkbox" id="glow-toggle">
+                <label for="glow-toggle">Добавить неоновое свечение</label>
+            </div>
+            
+            <div id="glow-settings" style="display: none; margin-top: 10px;">
+                <div style="display: flex; gap: 10px;">
+                    <div style="flex: 1;">
+                        <label>Цвет</label>
+                        <input type="color" id="glow-color" value="#ff6600">
+                    </div>
+                    <div style="flex: 2;">
+                        <div class="range-header">
+                            <label>Радиус (px)</label>
+                            <span class="range-value" id="glow-radius-val">15</span>
+                        </div>
+                        <input type="range" id="glow-radius" min="1" max="50" value="15">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button id="reset-btn">Сбросить</button>
+            <button id="copy-btn" class="primary-btn">СКОПИРОВАТЬ КОД</button>
+        </div>
     </div>
 
-    <div class="preview-area">
-        <div class="preview-header">Превью в реальном времени</div>
-        <img id="preview-element" src="https://via.placeholder.com/200?text=Загрузите+картинку" alt="Preview">
+    <div class="preview-area" id="drop-zone">
+        <div class="preview-header">Превью (Drag & Drop)</div>
+        <div id="preview-wrapper">
+            <img id="preview-element" src="https://via.placeholder.com/300x200/2a2a2a/ff6600?text=Загрузите+изображение" alt="Preview">
+        </div>
+        <div class="drag-text">Перетащите картинку сюда</div>
     </div>
 </div>
 
 <div id="code-modal">
     <div class="modal-content">
-        <h3>Готовый код для Genially</h3>
-        <p>Скопируйте код ниже и вставьте его в блок "Insert -> Others -> Custom HTML" в Genially:</p>
+        <h3 style="color: var(--primary-color); margin-top: 0;">Готовый код для Genially</h3>
+        <p>Вставьте этот код в блок "Insert -> Others -> Custom HTML":</p>
         <textarea id="code-output" readonly></textarea>
-        <button onclick="document.getElementById('code-modal').style.display='none'">Закрыть</button>
+        <button onclick="document.getElementById('code-modal').style.display='none'" style="width: 100%;">ЗАКРЫТЬ</button>
     </div>
 </div>
 
 <script>
+    // Элементы DOM
+    const sourceRadios = document.querySelectorAll('input[name="img-source"]');
     const imageUpload = document.getElementById('image-upload');
+    const imageUrl = document.getElementById('image-url');
     const previewElement = document.getElementById('preview-element');
+    const dropZone = document.getElementById('drop-zone');
+    
     const triggerSelect = document.getElementById('trigger-select');
     const animationSelect = document.getElementById('animation-select');
+    const animDuration = document.getElementById('anim-duration');
+    const animDelay = document.getElementById('anim-delay');
+    const imgScale = document.getElementById('img-scale');
+    
     const glowToggle = document.getElementById('glow-toggle');
+    const glowSettings = document.getElementById('glow-settings');
     const glowColor = document.getElementById('glow-color');
-    const glowColorGroup = document.getElementById('glow-color-group');
+    const glowRadius = document.getElementById('glow-radius');
+    
     const copyBtn = document.getElementById('copy-btn');
+    const resetBtn = document.getElementById('reset-btn');
     const codeOutput = document.getElementById('code-output');
     const codeModal = document.getElementById('code-modal');
 
-    let base64Image = '';
+    let currentImageSrc = '';
 
-    // Обработка загрузки и сжатия картинки
-    imageUpload.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (!file) return;
+    // Переключение источника (Файл / Ссылка)
+    sourceRadios.forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            if (e.target.value === 'file') {
+                imageUpload.style.display = 'block';
+                imageUrl.style.display = 'none';
+            } else {
+                imageUpload.style.display = 'none';
+                imageUrl.style.display = 'block';
+            }
+        });
+    });
 
+    // Обработка URL
+    imageUrl.addEventListener('input', (e) => {
+        if (e.target.value) {
+            currentImageSrc = e.target.value;
+            previewElement.src = currentImageSrc;
+            updatePreview();
+        }
+    });
+
+    // Обработка файла (Выбор + Drag & Drop)
+    function handleFile(file) {
+        if (!file || !file.type.startsWith('image/')) return;
         const reader = new FileReader();
         reader.onload = function(event) {
             const img = new Image();
             img.onload = function() {
-                // Сжимаем картинку через Canvas, если она слишком большая
                 const canvas = document.createElement('canvas');
-                const MAX_WIDTH = 500;
+                const MAX_WIDTH = 600; // Немного увеличил качество
                 let width = img.width;
                 let height = img.height;
-
-                if (width > MAX_WIDTH) {
-                    height *= MAX_WIDTH / width;
-                    width = MAX_WIDTH;
-                }
-
-                canvas.width = width;
-                canvas.height = height;
+                if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
+                canvas.width = width; canvas.height = height;
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, width, height);
-                
-                base64Image = canvas.toDataURL(file.type || 'image/png', 0.8);
-                previewElement.src = base64Image;
+                currentImageSrc = canvas.toDataURL(file.type || 'image/png', 0.85);
+                previewElement.src = currentImageSrc;
+                // Автоматически переключаем на "Файл", если кинули Drag&Drop
+                document.querySelector('input[value="file"]').checked = true;
+                imageUpload.style.display = 'block';
+                imageUrl.style.display = 'none';
                 updatePreview();
             }
             img.src = event.target.result;
         }
         reader.readAsDataURL(file);
+    }
+
+    imageUpload.addEventListener('change', (e) => handleFile(e.target.files[0]));
+
+    // Drag & Drop логика
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+    });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        if (e.dataTransfer.files.length) {
+            handleFile(e.dataTransfer.files[0]);
+        }
     });
 
-    // Управление свечением
+    // Обновление значений ползунков
+    function updateLabels() {
+        document.getElementById('duration-val').innerText = animDuration.value + 's';
+        document.getElementById('delay-val').innerText = animDelay.value + 's';
+        document.getElementById('scale-val').innerText = imgScale.value + '%';
+        document.getElementById('glow-radius-val').innerText = glowRadius.value;
+    }
+
+    // Слушатели для всех настроек
+    const inputs = [triggerSelect, animationSelect, animDuration, animDelay, imgScale, glowColor, glowRadius];
+    inputs.forEach(input => input.addEventListener('input', () => { updateLabels(); updatePreview(); }));
+    
     glowToggle.addEventListener('change', function() {
-        glowColorGroup.style.display = this.checked ? 'flex' : 'none';
+        glowSettings.style.display = this.checked ? 'block' : 'none';
         updatePreview();
     });
-    glowColor.addEventListener('input', updatePreview);
 
-    // Обновление анимации при смене настроек
-    triggerSelect.addEventListener('change', updatePreview);
-    animationSelect.addEventListener('change', updatePreview);
-
+    // Главная функция обновления превью
     function updatePreview() {
-        // Сброс старых классов
+        if (!currentImageSrc) return;
+        
         previewElement.className = '';
         const animName = animationSelect.value;
         const trigger = triggerSelect.value;
         
-        // Добавление свечения через drop-shadow (идеально для PNG)
+        // Масштаб
+        previewElement.style.transform = `scale(${imgScale.value / 100})`;
+        
+        // Свечение
         if (glowToggle.checked) {
-            previewElement.style.filter = `drop-shadow(0 0 15px ${glowColor.value})`;
+            previewElement.style.filter = `drop-shadow(0 0 ${glowRadius.value}px ${glowColor.value})`;
         } else {
             previewElement.style.filter = 'none';
         }
 
-        // Логика триггеров для превью
+        // Тайминги
+        previewElement.style.animationDuration = `${animDuration.value}s`;
+        previewElement.style.animationDelay = `${animDelay.value}s`;
+
+        // Логика триггеров
         if (trigger === 'entrance') {
             previewElement.classList.add('animate__animated', `animate__${animName}`);
         } else if (trigger === 'infinite') {
@@ -274,7 +480,7 @@
         } else if (trigger === 'hover') {
             previewElement.onmouseenter = () => {
                 previewElement.classList.remove('animate__animated', `animate__${animName}`);
-                void previewElement.offsetWidth; // Хак для перезапуска анимации
+                void previewElement.offsetWidth;
                 previewElement.classList.add('animate__animated', `animate__${animName}`);
             };
             previewElement.onmouseleave = null;
@@ -286,7 +492,7 @@
             };
         }
 
-        // Перезапуск анимации для "Появления", если мы просто сменили эффект в селекторе
+        // Перезапуск для Entrance/Infinite при смене настроек
         if (trigger === 'entrance' || trigger === 'infinite') {
             previewElement.classList.remove('animate__animated', `animate__${animName}`);
             void previewElement.offsetWidth;
@@ -294,35 +500,52 @@
         }
     }
 
+    // Сброс
+    resetBtn.addEventListener('click', () => {
+        triggerSelect.value = 'entrance';
+        animationSelect.value = 'bounce';
+        animDuration.value = 1;
+        animDelay.value = 0;
+        imgScale.value = 100;
+        glowToggle.checked = false;
+        glowSettings.style.display = 'none';
+        glowColor.value = '#ff6600';
+        glowRadius.value = 15;
+        updateLabels();
+        updatePreview();
+    });
+
     // Генерация кода
     copyBtn.addEventListener('click', () => {
-        if (!base64Image) {
-            alert("Пожалуйста, сначала загрузите картинку!");
+        if (!currentImageSrc) {
+            alert("Сначала загрузите картинку или вставьте ссылку!");
             return;
         }
 
         const animName = animationSelect.value;
         const trigger = triggerSelect.value;
-        const glowFilter = glowToggle.checked ? `filter: drop-shadow(0 0 15px ${glowColor.value});` : '';
+        const scale = imgScale.value / 100;
+        const glowFilter = glowToggle.checked ? `filter: drop-shadow(0 0 ${glowRadius.value}px ${glowColor.value});` : '';
+        const timings = `--animate-duration: ${animDuration.value}s; --animate-delay: ${animDelay.value}s;`;
         
         let htmlSnippet = `<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>\n`;
-        htmlSnippet += `<style>\n  .genially-custom-img { max-width: 100%; cursor: pointer; ${glowFilter} }\n`;
+        htmlSnippet += `<style>\n  .gen-img { width: ${scale * 100}%; cursor: pointer; ${glowFilter} ${timings} }\n`;
 
         if (trigger === 'hover') {
-            htmlSnippet += `  .genially-wrapper:hover .genially-custom-img { animation: ${animName} 1s ease forwards; }\n`;
+            htmlSnippet += `  .gen-wrap:hover .gen-img { animation: ${animName} ${animDuration.value}s ease ${animDelay.value}s forwards; }\n`;
         }
         htmlSnippet += `</style>\n`;
 
-        htmlSnippet += `<div class="genially-wrapper" style="text-align: center;">\n`;
+        htmlSnippet += `<div class="gen-wrap" style="text-align: center; display: flex; justify-content: center; align-items: center; width: 100%; height: 100%;">\n`;
 
         if (trigger === 'entrance') {
-            htmlSnippet += `  <img src="${base64Image}" class="genially-custom-img animate__animated animate__${animName}" />\n`;
+            htmlSnippet += `  <img src="${currentImageSrc}" class="gen-img animate__animated animate__${animName} animate__delay-${animDelay.value}s" style="animation-duration: ${animDuration.value}s;" />\n`;
         } else if (trigger === 'infinite') {
-            htmlSnippet += `  <img src="${base64Image}" class="genially-custom-img animate__animated animate__${animName} animate__infinite" />\n`;
+            htmlSnippet += `  <img src="${currentImageSrc}" class="gen-img animate__animated animate__${animName} animate__infinite" style="animation-duration: ${animDuration.value}s; animation-delay: ${animDelay.value}s;" />\n`;
         } else if (trigger === 'hover') {
-            htmlSnippet += `  <img src="${base64Image}" class="genially-custom-img animate__animated" />\n`;
+            htmlSnippet += `  <img src="${currentImageSrc}" class="gen-img animate__animated" />\n`;
         } else if (trigger === 'click') {
-            htmlSnippet += `  <img src="${base64Image}" class="genially-custom-img" onclick="this.classList.remove('animate__animated', 'animate__${animName}'); void this.offsetWidth; this.classList.add('animate__animated', 'animate__${animName}');" />\n`;
+            htmlSnippet += `  <img src="${currentImageSrc}" class="gen-img" onclick="this.classList.remove('animate__animated', 'animate__${animName}'); void this.offsetWidth; this.classList.add('animate__animated', 'animate__${animName}');" style="animation-duration: ${animDuration.value}s; animation-delay: ${animDelay.value}s;" />\n`;
         }
 
         htmlSnippet += `</div>`;
@@ -330,10 +553,16 @@
         codeOutput.value = htmlSnippet;
         codeModal.style.display = 'flex';
         
-        // Автоматическое копирование в буфер обмена
         navigator.clipboard.writeText(htmlSnippet).then(() => {
+            const originalText = copyBtn.innerText;
             copyBtn.innerText = "СКОПИРОВАНО!";
-            setTimeout(() => copyBtn.innerText = "СКОПИРОВАТЬ КОД", 2000);
+            copyBtn.style.backgroundColor = "#fff";
+            copyBtn.style.color = "#ff6600";
+            setTimeout(() => {
+                copyBtn.innerText = originalText;
+                copyBtn.style.backgroundColor = "";
+                copyBtn.style.color = "";
+            }, 2000);
         });
     });
 </script>

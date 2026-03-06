@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neon Genially Animator</title>
+    <title>Neon Genially Animator | Светлана Быкова</title>
     <style>
         @import url('https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css');
         
@@ -23,8 +23,67 @@
             color: var(--text-color);
             margin: 0;
             display: flex;
+            flex-direction: column;
             height: 100vh;
             overflow: hidden;
+        }
+
+        /* --- Брендинг и Логотип --- */
+        .main-header {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            background: rgba(30, 30, 30, 0.7);
+            border-bottom: var(--neon-border);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            z-index: 100;
+        }
+
+        .logo-link {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .logo-img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            margin-right: 15px;
+            transition: transform 0.3s;
+        }
+
+        @keyframes softPulse {
+            0% { transform: scale(1); opacity: 0.8; filter: drop-shadow(0 0 2px var(--primary-color)); }
+            50% { transform: scale(1.05); opacity: 1; filter: drop-shadow(0 0 10px var(--primary-color)); }
+            100% { transform: scale(1); opacity: 0.8; filter: drop-shadow(0 0 2px var(--primary-color)); }
+        }
+
+        .pulsate {
+            animation: softPulse 2s infinite ease-in-out;
+        }
+
+        .logo-link:hover .logo-img {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .header-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .author-name {
+            font-weight: bold;
+            font-size: 16px;
+            color: var(--primary-color);
+            text-shadow: 0 0 8px rgba(255, 102, 0, 0.5);
+        }
+
+        .project-title {
+            font-size: 14px;
+            color: #aaa;
+            margin-top: -2px;
         }
 
         ::-webkit-scrollbar { width: 8px; }
@@ -33,46 +92,50 @@
 
         .container {
             display: flex;
+            flex: 1;
             width: 100%;
-            padding: 20px;
+            padding: 10px 20px 20px 20px;
             gap: 20px;
-            height: calc(100vh - 40px);
+            box-sizing: border-box;
+            overflow: hidden;
         }
 
         .settings {
             flex: 1;
             background: var(--panel-bg);
-            padding: 25px;
+            padding: 20px;
             border-radius: 12px;
             border: var(--neon-border);
             box-shadow: var(--neon-glow);
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            max-width: 450px;
+            gap: 12px;
+            max-width: 420px;
             overflow-y: auto;
         }
 
         .settings h2 { 
             margin-top: 0; 
-            font-size: 22px; 
+            margin-bottom: 5px;
+            font-size: 20px; 
             color: var(--primary-color);
             text-shadow: 0 0 8px rgba(255, 102, 0, 0.5);
+            text-align: center;
         }
 
         .form-group { 
             display: flex; 
             flex-direction: column; 
-            gap: 5px; 
-            background: rgba(255,255,255,0.03);
-            padding: 10px;
+            gap: 4px; 
+            background: rgba(255,255,255,0.02);
+            padding: 8px;
             border-radius: 8px;
         }
 
-        label { font-weight: bold; font-size: 13px; color: #aaa; }
+        label { font-weight: bold; font-size: 12px; color: #aaa; }
         
         input[type="file"], input[type="text"], select, input[type="color"] {
-            padding: 8px;
+            padding: 7px;
             background: #2a2a2a;
             color: white;
             border: 1px solid #444;
@@ -80,6 +143,7 @@
             width: 100%;
             box-sizing: border-box;
             transition: border 0.3s;
+            font-size: 13px;
         }
         
         input[type="text"]:focus, select:focus {
@@ -88,29 +152,29 @@
             box-shadow: 0 0 5px rgba(255, 102, 0, 0.3);
         }
 
-        input[type="range"] { accent-color: var(--primary-color); width: 100%; }
-        .range-header { display: flex; justify-content: space-between; align-items: center; }
+        input[type="range"] { accent-color: var(--primary-color); width: 100%; margin: 0;}
+        .range-header { display: flex; justify-content: space-between; align-items: center; font-size: 12px;}
         .range-value { color: var(--primary-color); font-weight: bold; }
 
-        .radio-group { display: flex; gap: 15px; margin-bottom: 5px; }
-        .radio-group label { color: var(--text-color); cursor: pointer; display: flex; align-items: center; gap: 5px;}
-        input[type="radio"] { accent-color: var(--primary-color); }
+        .radio-group { display: flex; gap: 15px; margin-bottom: 2px; }
+        .radio-group label { color: var(--text-color); cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 13px;}
+        input[type="radio"] { accent-color: var(--primary-color); margin: 0;}
 
-        .checkbox-group { display: flex; align-items: center; gap: 10px; }
-        input[type="checkbox"] { accent-color: var(--primary-color); width: 16px; height: 16px; }
+        .checkbox-group { display: flex; align-items: center; gap: 10px; margin-top: 5px;}
+        input[type="checkbox"] { accent-color: var(--primary-color); width: 15px; height: 15px; margin: 0;}
 
-        .button-group { display: flex; gap: 10px; margin-top: 10px; }
+        .button-group { display: flex; gap: 10px; margin-top: auto; padding-top: 10px;}
         
         button {
             flex: 1;
             background-color: transparent;
             color: var(--primary-color);
             border: 2px solid var(--primary-color);
-            padding: 12px;
+            padding: 10px;
             border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 13px;
             transition: all 0.3s;
             text-transform: uppercase;
         }
@@ -137,6 +201,7 @@
             background-image: radial-gradient(#333 1px, transparent 1px);
             background-size: 20px 20px;
             transition: background-color 0.3s;
+            overflow: hidden;
         }
         
         .preview-area.dragover {
@@ -146,18 +211,20 @@
 
         .preview-header {
             position: absolute;
-            top: 20px;
-            left: 20px;
+            top: 15px;
+            left: 15px;
             background: rgba(30, 30, 30, 0.9);
             color: var(--primary-color);
-            padding: 5px 12px;
+            padding: 4px 10px;
             border-radius: 5px;
             font-weight: bold;
+            font-size: 12px;
             border: 1px solid var(--primary-color);
             box-shadow: 0 0 10px rgba(255, 102, 0, 0.2);
+            z-index: 10;
         }
 
-        .drag-text { position: absolute; bottom: 20px; color: #666; font-size: 14px; }
+        .drag-text { position: absolute; bottom: 15px; color: #555; font-size: 12px; z-index: 10;}
 
         #preview-wrapper {
             display: flex;
@@ -165,53 +232,35 @@
             justify-content: center;
             width: 100%;
             height: 100%;
+            overflow: hidden;
+            padding: 50px; 
+            box-sizing: border-box;
         }
 
         #preview-element {
-            max-width: 80%;
-            max-height: 80%;
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
             transition: filter 0.3s, transform 0.3s;
             transform-origin: center;
-        }
-        
-        #code-modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
-            align-items: center; justify-content: center;
-            z-index: 1000;
-        }
-        .modal-content {
-            background: var(--panel-bg);
-            border: var(--neon-border);
-            box-shadow: var(--neon-glow);
-            padding: 25px;
-            border-radius: 12px;
-            width: 600px;
-            max-width: 90%;
-            color: white;
-        }
-        textarea {
-            width: 100%;
-            height: 200px;
-            margin: 15px 0;
-            font-family: monospace;
-            padding: 10px;
-            background: #121212;
-            color: #00ff00; 
-            border: 1px solid #444;
-            border-radius: 6px;
-            box-sizing: border-box;
-            resize: none;
         }
     </style>
 </head>
 <body>
 
+<header class="main-header">
+    <a href="https://t.me/interactiv_matematika" target="_blank" class="logo-link" title="Перейти на Telegram-канал">
+        <img src="logo.png" alt="Логотип" class="logo-img pulsate">
+    </a>
+    <div class="header-text">
+        <div class="author-name">Светлана Быкова</div>
+        <div class="project-title">Шкатулка математических интерактивов</div>
+    </div>
+</header>
+
 <div class="container">
     <div class="settings">
-        <h2>NEON ANIMATOR</h2>
+        <h2>Редактор анимаций</h2>
         
         <div class="form-group">
             <label>1. Источник изображения</label>
@@ -261,7 +310,7 @@
             </div>
             <input type="range" id="anim-duration" min="0.1" max="5" step="0.1" value="1">
             
-            <div class="range-header" style="margin-top: 10px;">
+            <div class="range-header" style="margin-top: 5px;">
                 <label>Задержка старта (сек):</label>
                 <span class="range-value" id="delay-val">0s</span>
             </div>
@@ -273,7 +322,7 @@
                 <label>Масштаб картинки (%):</label>
                 <span class="range-value" id="scale-val">100%</span>
             </div>
-            <input type="range" id="img-scale" min="10" max="200" step="5" value="100">
+            <input type="range" id="img-scale" min="10" max="150" step="5" value="100">
         </div>
 
         <div class="form-group">
@@ -282,8 +331,8 @@
                 <label for="glow-toggle">Добавить свечение</label>
             </div>
             
-            <div id="glow-settings" style="display: none; margin-top: 10px;">
-                <div style="display: flex; gap: 10px;">
+            <div id="glow-settings" style="display: none; margin-top: 5px;">
+                <div style="display: flex; gap: 8px;">
                     <div style="flex: 1;">
                         <label>Цвет</label>
                         <input type="color" id="glow-color" value="#ff6600">
@@ -306,20 +355,11 @@
     </div>
 
     <div class="preview-area" id="drop-zone">
-        <div class="preview-header">Превью (Drag & Drop)</div>
+        <div class="preview-header">Превью (воздушная подушка вкл.)</div>
         <div id="preview-wrapper">
-            <img id="preview-element" src="https://via.placeholder.com/300x200/2a2a2a/ff6600?text=Загрузите+изображение" alt="Preview">
+            <img id="preview-element" src="https://via.placeholder.com/200x150/2a2a2a/ff6600?text=Загрузите+картинку" alt="Preview">
         </div>
-        <div class="drag-text">Перетащите картинку сюда</div>
-    </div>
-</div>
-
-<div id="code-modal">
-    <div class="modal-content">
-        <h3 style="color: var(--primary-color); margin-top: 0;">Готовый код для Genially</h3>
-        <p>Вставьте этот код в блок "Insert -> Others -> Custom HTML":</p>
-        <textarea id="code-output" readonly></textarea>
-        <button onclick="document.getElementById('code-modal').style.display='none'" style="width: 100%;">ЗАКРЫТЬ</button>
+        <div class="drag-text">Или перетащите файл сюда</div>
     </div>
 </div>
 
@@ -343,8 +383,6 @@
     
     const copyBtn = document.getElementById('copy-btn');
     const resetBtn = document.getElementById('reset-btn');
-    const codeOutput = document.getElementById('code-output');
-    const codeModal = document.getElementById('code-modal');
 
     let currentImageSrc = '';
 
@@ -375,7 +413,6 @@
             const img = new Image();
             img.onload = function() {
                 const canvas = document.createElement('canvas');
-                // Сжимаем картинку, чтобы код не превышал лимиты Genially
                 const MAX_WIDTH = 400; 
                 let width = img.width;
                 let height = img.height;
@@ -383,10 +420,8 @@
                 canvas.width = width; canvas.height = height;
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, width, height);
-                
                 currentImageSrc = canvas.toDataURL(file.type === 'image/png' ? 'image/png' : 'image/jpeg', 0.7);
                 previewElement.src = currentImageSrc;
-                
                 document.querySelector('input[value="file"]').checked = true;
                 imageUpload.style.display = 'block';
                 imageUrl.style.display = 'none';
@@ -424,22 +459,18 @@
 
     function updatePreview() {
         if (!currentImageSrc) return;
-        
         previewElement.className = '';
         const animName = animationSelect.value;
         const trigger = triggerSelect.value;
-        
         previewElement.style.transform = `scale(${imgScale.value / 100})`;
-        
         if (glowToggle.checked) {
             previewElement.style.filter = `drop-shadow(0 0 ${glowRadius.value}px ${glowColor.value})`;
         } else {
             previewElement.style.filter = 'none';
         }
-
         previewElement.style.animationDuration = `${animDuration.value}s`;
         previewElement.style.animationDelay = `${animDelay.value}s`;
-
+        
         if (trigger === 'entrance') {
             previewElement.classList.add('animate__animated', `animate__${animName}`);
         } else if (trigger === 'infinite') {
@@ -458,7 +489,6 @@
                 previewElement.classList.add('animate__animated', `animate__${animName}`);
             };
         }
-
         if (trigger === 'entrance' || trigger === 'infinite') {
             previewElement.classList.remove('animate__animated', `animate__${animName}`);
             void previewElement.offsetWidth;
@@ -467,44 +497,39 @@
     }
 
     resetBtn.addEventListener('click', () => {
-        triggerSelect.value = 'entrance';
-        animationSelect.value = 'bounce';
-        animDuration.value = 1;
-        animDelay.value = 0;
-        imgScale.value = 100;
-        glowToggle.checked = false;
-        glowSettings.style.display = 'none';
-        glowColor.value = '#ff6600';
-        glowRadius.value = 15;
-        updateLabels();
-        updatePreview();
+        triggerSelect.value = 'entrance'; animationSelect.value = 'bounce';
+        animDuration.value = 1; animDelay.value = 0; imgScale.value = 100;
+        glowToggle.checked = false; glowSettings.style.display = 'none';
+        glowColor.value = '#ff6600'; glowRadius.value = 15;
+        updateLabels(); updatePreview();
     });
 
     copyBtn.addEventListener('click', () => {
-        if (!currentImageSrc) {
-            alert("Сначала загрузите картинку или вставьте ссылку!");
-            return;
-        }
-
+        if (!currentImageSrc) { alert("Сначала загрузите картинку!"); return; }
         const animName = animationSelect.value;
         const trigger = triggerSelect.value;
         const scale = imgScale.value / 100;
         const glowFilter = glowToggle.checked ? `filter: drop-shadow(0 0 ${glowRadius.value}px ${glowColor.value});` : '';
         const timings = `--animate-duration: ${animDuration.value}s; --animate-delay: ${animDelay.value}s;`;
         
-        // ВАЖНО: Формируем внутренний HTML
         let innerHTML = `
             <style>
                 @import url('https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css');
-                body { margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; width: 100vw; height: 100vh; background: transparent; overflow: hidden; }
-                .gen-img { transform: scale(${scale}); max-width: 100%; max-height: 100%; object-fit: contain; cursor: pointer; ${glowFilter} ${timings} }
+                body { margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; width: 100vw; height: 100vh; background: transparent; overflow: hidden; box-sizing: border-box; }
+                .gen-img { 
+                    transform: scale(${scale}); 
+                    max-width: 75%; 
+                    max-height: 75%; 
+                    object-fit: contain; 
+                    cursor: pointer; 
+                    ${glowFilter} 
+                    ${timings} 
+                }
         `;
-
         if (trigger === 'hover') {
             innerHTML += ` body:hover .gen-img { animation: ${animName} ${animDuration.value}s ease ${animDelay.value}s forwards; }\n`;
         }
         innerHTML += `</style>\n`;
-
         if (trigger === 'entrance') {
             innerHTML += `<img src="${currentImageSrc}" class="gen-img animate__animated animate__${animName}" />\n`;
         } else if (trigger === 'infinite') {
@@ -514,30 +539,19 @@
         } else if (trigger === 'click') {
             innerHTML += `<img src="${currentImageSrc}" class="gen-img" onclick="this.classList.remove('animate__animated', 'animate__${animName}'); void this.offsetWidth; this.classList.add('animate__animated', 'animate__${animName}');" />\n`;
         }
-
-        // Волшебство: Экранируем символы, чтобы вставить код внутрь атрибута srcdoc у iframe
-        const escapedHTML = innerHTML
-            .replace(/&/g, "&amp;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#39;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;");
-
-        // Оборачиваем всё в iframe! Genially это обожает.
+        const escapedHTML = innerHTML.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/'/g, "&#39;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
         let htmlSnippet = `<iframe style="width: 100%; height: 100%; border: none; background: transparent;" allowtransparency="true" srcdoc="${escapedHTML}"></iframe>`;
-
-        codeOutput.value = htmlSnippet;
-        codeModal.style.display = 'flex';
         
+        // Тихое копирование без модального окна
         navigator.clipboard.writeText(htmlSnippet).then(() => {
             const originalText = copyBtn.innerText;
-            copyBtn.innerText = "СКОПИРОВАНО!";
-            copyBtn.style.backgroundColor = "#fff";
+            copyBtn.innerText = "СКОПИРОВАНО!"; 
+            copyBtn.style.backgroundColor = "#fff"; 
             copyBtn.style.color = "#ff6600";
-            setTimeout(() => {
-                copyBtn.innerText = originalText;
-                copyBtn.style.backgroundColor = "";
-                copyBtn.style.color = "";
+            setTimeout(() => { 
+                copyBtn.innerText = originalText; 
+                copyBtn.style.backgroundColor = ""; 
+                copyBtn.style.color = ""; 
             }, 2000);
         });
     });

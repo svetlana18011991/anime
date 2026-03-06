@@ -60,31 +60,12 @@
             100% { transform: scale(1); opacity: 0.8; filter: drop-shadow(0 0 2px var(--primary-color)); }
         }
 
-        .pulsate {
-            animation: softPulse 2s infinite ease-in-out;
-        }
+        .pulsate { animation: softPulse 2s infinite ease-in-out; }
+        .logo-link:hover .logo-img { transform: scale(1.1) rotate(5deg); }
 
-        .logo-link:hover .logo-img {
-            transform: scale(1.1) rotate(5deg);
-        }
-
-        .header-text {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .author-name {
-            font-weight: bold;
-            font-size: 16px;
-            color: var(--primary-color);
-            text-shadow: 0 0 8px rgba(255, 102, 0, 0.5);
-        }
-
-        .project-title {
-            font-size: 14px;
-            color: #aaa;
-            margin-top: -2px;
-        }
+        .header-text { display: flex; flex-direction: column; }
+        .author-name { font-weight: bold; font-size: 16px; color: var(--primary-color); text-shadow: 0 0 8px rgba(255, 102, 0, 0.5); }
+        .project-title { font-size: 14px; color: #aaa; margin-top: -2px; }
 
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: var(--bg-color); }
@@ -162,6 +143,17 @@
 
         .checkbox-group { display: flex; align-items: center; gap: 10px; margin-top: 5px;}
         input[type="checkbox"] { accent-color: var(--primary-color); width: 15px; height: 15px; margin: 0;}
+
+        /* Стили для светофора */
+        .status-light {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        .light-green { background-color: #00ff00; box-shadow: 0 0 10px #00ff00; }
+        .light-red { background-color: #ff0000; box-shadow: 0 0 12px #ff0000, 0 0 5px #ff0000 inset; }
 
         .button-group { display: flex; gap: 10px; margin-top: auto; padding-top: 10px;}
         
@@ -272,6 +264,18 @@
             <input type="text" id="image-url" placeholder="Вставьте прямую ссылку на картинку" style="display: none;">
         </div>
 
+        <div class="form-group" id="compression-container" style="display: none; border: 1px dashed var(--primary-color); padding: 10px; background: rgba(255,102,0,0.05);">
+            <div class="range-header">
+                <label style="display: flex; align-items: center; gap: 8px;">
+                    Качество картинки
+                    <div id="status-light" class="status-light light-green"></div>
+                </label>
+                <span class="range-value" id="quality-val">70%</span>
+            </div>
+            <input type="range" id="img-quality" min="0.05" max="1" step="0.05" value="0.7">
+            <div id="code-size-info" style="font-size: 11px; color: #aaa; text-align: right; margin-top: 4px;">Загрузите файл...</div>
+        </div>
+
         <div class="form-group">
             <label>2. Триггер анимации</label>
             <select id="trigger-select">
@@ -355,7 +359,7 @@
     </div>
 
     <div class="preview-area" id="drop-zone">
-        <div class="preview-header">Превью (воздушная подушка вкл.)</div>
+        <div class="preview-header">Превью</div>
         <div id="preview-wrapper">
             <img id="preview-element" src="https://via.placeholder.com/200x150/2a2a2a/ff6600?text=Загрузите+картинку" alt="Preview">
         </div>
@@ -369,6 +373,10 @@
     const imageUrl = document.getElementById('image-url');
     const previewElement = document.getElementById('preview-element');
     const dropZone = document.getElementById('drop-zone');
+    const compressionContainer = document.getElementById('compression-container');
+    const imgQuality = document.getElementById('img-quality');
+    const statusLight = document.getElementById('status-light');
+    const codeSizeInfo = document.getElementById('code-size-info');
     
     const triggerSelect = document.getElementById('trigger-select');
     const animationSelect = document.getElementById('animation-select');
@@ -385,15 +393,21 @@
     const resetBtn = document.getElementById('reset-btn');
 
     let currentImageSrc = '';
+    let originalLoadedImage = null; // Храним оригинал для пересжатия
 
+    // Переключение источника
     sourceRadios.forEach(radio => {
         radio.addEventListener('change', (e) => {
             if (e.target.value === 'file') {
                 imageUpload.style.display = 'block';
                 imageUrl.style.display = 'none';
+                if(originalLoadedImage) compressionContainer.style.display = 'flex';
+                checkCodeSize();
             } else {
                 imageUpload.style.display = 'none';
                 imageUrl.style.display = 'block';
+                compressionContainer.style.display = 'none';
+                checkCodeSize();
             }
         });
     });
@@ -403,33 +417,63 @@
             currentImageSrc = e.target.value;
             previewElement.src = currentImageSrc;
             updatePreview();
+            checkCodeSize();
         }
     });
 
+    // Изменение качества ползунком
+    imgQuality.addEventListener('input', (e) => {
+        document.getElementById('quality-val').innerText = Math.round(e.target.value * 100) + '%';
+        applyCompressionAndPreview();
+    });
+
+    // Логика загрузки оригинала
     function handleFile(file) {
         if (!file || !file.type.startsWith('image/')) return;
         const reader = new FileReader();
         reader.onload = function(event) {
             const img = new Image();
             img.onload = function() {
-                const canvas = document.createElement('canvas');
-                const MAX_WIDTH = 400; 
-                let width = img.width;
-                let height = img.height;
-                if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
-                canvas.width = width; canvas.height = height;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0, width, height);
-                currentImageSrc = canvas.toDataURL(file.type === 'image/png' ? 'image/png' : 'image/jpeg', 0.7);
-                previewElement.src = currentImageSrc;
+                originalLoadedImage = img;
+                
                 document.querySelector('input[value="file"]').checked = true;
                 imageUpload.style.display = 'block';
                 imageUrl.style.display = 'none';
-                updatePreview();
+                compressionContainer.style.display = 'flex';
+                
+                applyCompressionAndPreview();
             }
             img.src = event.target.result;
         }
         reader.readAsDataURL(file);
+    }
+
+    // Применение сжатия
+    function applyCompressionAndPreview() {
+        if (!originalLoadedImage) return;
+        
+        const canvas = document.createElement('canvas');
+        const MAX_WIDTH = 500; 
+        let width = originalLoadedImage.width;
+        let height = originalLoadedImage.height;
+        
+        if (width > MAX_WIDTH) { 
+            height *= MAX_WIDTH / width; 
+            width = MAX_WIDTH; 
+        }
+        
+        canvas.width = width; 
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(originalLoadedImage, 0, 0, width, height);
+        
+        const quality = parseFloat(imgQuality.value);
+        // Используем WebP - он сжимает размер, но сохраняет прозрачность фона!
+        currentImageSrc = canvas.toDataURL('image/webp', quality);
+        
+        previewElement.src = currentImageSrc;
+        updatePreview();
+        checkCodeSize();
     }
 
     imageUpload.addEventListener('change', (e) => handleFile(e.target.files[0]));
@@ -450,11 +494,12 @@
     }
 
     const inputs = [triggerSelect, animationSelect, animDuration, animDelay, imgScale, glowColor, glowRadius];
-    inputs.forEach(input => input.addEventListener('input', () => { updateLabels(); updatePreview(); }));
+    inputs.forEach(input => input.addEventListener('input', () => { updateLabels(); updatePreview(); checkCodeSize(); }));
     
     glowToggle.addEventListener('change', function() {
         glowSettings.style.display = this.checked ? 'block' : 'none';
         updatePreview();
+        checkCodeSize();
     });
 
     function updatePreview() {
@@ -496,16 +541,8 @@
         }
     }
 
-    resetBtn.addEventListener('click', () => {
-        triggerSelect.value = 'entrance'; animationSelect.value = 'bounce';
-        animDuration.value = 1; animDelay.value = 0; imgScale.value = 100;
-        glowToggle.checked = false; glowSettings.style.display = 'none';
-        glowColor.value = '#ff6600'; glowRadius.value = 15;
-        updateLabels(); updatePreview();
-    });
-
-    copyBtn.addEventListener('click', () => {
-        if (!currentImageSrc) { alert("Сначала загрузите картинку!"); return; }
+    // Главная функция генерации кода (чтобы проверять длину)
+    function generateCodeSnippet() {
         const animName = animationSelect.value;
         const trigger = triggerSelect.value;
         const scale = imgScale.value / 100;
@@ -540,9 +577,54 @@
             innerHTML += `<img src="${currentImageSrc}" class="gen-img" onclick="this.classList.remove('animate__animated', 'animate__${animName}'); void this.offsetWidth; this.classList.add('animate__animated', 'animate__${animName}');" />\n`;
         }
         const escapedHTML = innerHTML.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/'/g, "&#39;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-        let htmlSnippet = `<iframe style="width: 100%; height: 100%; border: none; background: transparent;" allowtransparency="true" srcdoc="${escapedHTML}"></iframe>`;
+        return `<iframe style="width: 100%; height: 100%; border: none; background: transparent;" allowtransparency="true" srcdoc="${escapedHTML}"></iframe>`;
+    }
+
+    // Проверка веса кода для светофора
+    function checkCodeSize() {
+        if (!currentImageSrc) return;
         
-        // Тихое копирование без модального окна
+        // Если выбрана загрузка по ссылке - код всегда идеальный
+        if (document.querySelector('input[name="img-source"]:checked').value === 'url') {
+            statusLight.className = 'status-light light-green';
+            codeSizeInfo.innerText = 'URL: код легкий!';
+            codeSizeInfo.style.color = '#888';
+            return;
+        }
+
+        const htmlSnippet = generateCodeSnippet();
+        const codeLength = htmlSnippet.length;
+        const MAX_SAFE_LENGTH = 12000; // Лимит Genially
+
+        if (codeLength > MAX_SAFE_LENGTH) {
+            statusLight.className = 'status-light light-red';
+            codeSizeInfo.innerText = `Слишком тяжелая (${Math.round(codeLength/1024)} KB)! Genially не примет. Уменьшите качество.`;
+            codeSizeInfo.style.color = '#ff4444';
+        } else {
+            statusLight.className = 'status-light light-green';
+            codeSizeInfo.innerText = `Всё отлично (${Math.round(codeLength/1024)} KB) - можно вставлять!`;
+            codeSizeInfo.style.color = '#888';
+        }
+    }
+
+    resetBtn.addEventListener('click', () => {
+        triggerSelect.value = 'entrance'; animationSelect.value = 'bounce';
+        animDuration.value = 1; animDelay.value = 0; imgScale.value = 100;
+        glowToggle.checked = false; glowSettings.style.display = 'none';
+        glowColor.value = '#ff6600'; glowRadius.value = 15;
+        if(originalLoadedImage) {
+            imgQuality.value = 0.7;
+            document.getElementById('quality-val').innerText = '70%';
+            applyCompressionAndPreview();
+        }
+        updateLabels(); updatePreview();
+    });
+
+    copyBtn.addEventListener('click', () => {
+        if (!currentImageSrc) { alert("Сначала загрузите картинку!"); return; }
+        
+        const htmlSnippet = generateCodeSnippet();
+        
         navigator.clipboard.writeText(htmlSnippet).then(() => {
             const originalText = copyBtn.innerText;
             copyBtn.innerText = "СКОПИРОВАНО!"; 

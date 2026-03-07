@@ -112,7 +112,9 @@
         #demo-indicator { display: none; color: #fff; background: var(--primary-color); padding: 5px 12px; border-radius: 15px; font-size: 11px; font-weight: bold; box-shadow: 0 0 10px rgba(255,102,0,0.5); }
         
         #preview-wrapper { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 20px; box-sizing: border-box;}
-        #preview-element { width: auto; height: auto; max-width: 75%; max-height: 75%; object-fit: contain; cursor: pointer; }
+        
+        /* ВАЖНО: Добавлено width: 100% и height: 100%, чтобы картинка искусственно растягивалась в превью */
+        #preview-element { width: 100%; height: 100%; max-width: 75%; max-height: 75%; object-fit: contain; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -337,7 +339,6 @@
         document.getElementById('code-size-info').innerText = 'Отпустите мышку для сжатия...';
         document.getElementById('code-size-info').style.color = '#ffcc00';
     });
-    // Сжимаем ТОЛЬКО когда пользователь отпустил мышку
     imgQualitySlider.addEventListener('change', () => applyCompression());
 
     // --- АВТО-ТЕСТ ---
@@ -400,7 +401,6 @@
                 document.querySelector('input[value="file"]').checked = true;
                 document.getElementById('image-upload').style.display = 'block'; document.getElementById('image-url').style.display = 'none';
                 document.getElementById('compression-container').style.display = 'flex';
-                // Дефолт ставим на 150px для гарантии зеленого света
                 document.getElementById('img-quality').value = 150; document.getElementById('quality-val').innerText = '150px';
                 applyCompression();
             };
@@ -570,14 +570,18 @@
     }
 
     // --- ЖЕЛЕЗОБЕТОННОЕ КОПИРОВАНИЕ ---
-    document.getElementById('copy-btn').addEventListener('click', async () => {
+    document.getElementById('copy-btn').addEventListener('click', function() {
         if (!currentSrc) { alert("Сначала добавьте картинку!"); return; }
         
         const btn = document.getElementById('copy-btn');
         let codeToCopy = '';
         
-        try { codeToCopy = genCode(); } 
-        catch (e) { alert("Ошибка при генерации кода."); return; }
+        try { 
+            codeToCopy = genCode(); 
+        } catch (e) { 
+            alert("Ошибка при генерации кода."); 
+            return; 
+        }
 
         const successCopy = () => {
             btn.innerText = "✓ КОД СКОПИРОВАН"; 
@@ -590,21 +594,34 @@
             }, 2000);
         };
 
+        const textArea = document.createElement("textarea");
+        textArea.value = codeToCopy;
+        textArea.style.position = "fixed";
+        textArea.style.top = "0";
+        textArea.style.left = "0";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+
+        let syncSuccess = false;
         try {
-            await navigator.clipboard.writeText(codeToCopy);
+            syncSuccess = document.execCommand('copy');
+        } catch (err) {}
+        
+        document.body.removeChild(textArea);
+
+        if (syncSuccess) {
             successCopy();
-        } catch (err) {
-            try {
-                const textArea = document.createElement("textarea");
-                textArea.value = codeToCopy;
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
-                successCopy();
-            } catch (err2) {
-                alert("Ошибка копирования. Ваш браузер блокирует буфер обмена.");
-            }
+        } else if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(codeToCopy)
+                .then(successCopy)
+                .catch(() => {
+                    window.prompt("Браузер заблокировал кнопку. Нажмите Ctrl+C, чтобы скопировать:", codeToCopy);
+                    successCopy();
+                });
+        } else {
+            window.prompt("Браузер заблокировал кнопку. Нажмите Ctrl+C, чтобы скопировать:", codeToCopy);
+            successCopy();
         }
     });
 </script>

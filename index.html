@@ -63,7 +63,7 @@
             border-radius: 6px; width: 100%; box-sizing: border-box; font-size: 13px;
         }
         input[type="text"]:focus, select:focus { outline: none; border-color: var(--primary-color); }
-        input[type="range"] { accent-color: var(--primary-color); width: 100%; margin: 2px 0;}
+        input[type="range"] { accent-color: var(--primary-color); width: 100%; margin: 2px 0; cursor: pointer;}
         .range-header { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #999;}
         .range-value { color: var(--primary-color); font-weight: bold; font-size: 12px;}
         .radio-group { display: flex; gap: 15px; }
@@ -84,6 +84,7 @@
         .status-light { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
         .light-green { background: #00ff00; box-shadow: 0 0 8px #00ff00; }
         .light-red { background: #ff0000; box-shadow: 0 0 8px #ff0000; }
+        .light-yellow { background: #ffcc00; box-shadow: 0 0 8px #ffcc00; }
 
         .btn-group { display: flex; gap: 10px; margin-top: auto; padding-top: 10px; }
         button {
@@ -111,7 +112,7 @@
         #demo-indicator { display: none; color: #fff; background: var(--primary-color); padding: 5px 12px; border-radius: 15px; font-size: 11px; font-weight: bold; box-shadow: 0 0 10px rgba(255,102,0,0.5); }
         
         #preview-wrapper { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 20px; box-sizing: border-box;}
-        #preview-element { width: 100%; height: 100%; max-width: 75%; max-height: 75%; object-fit: contain; cursor: pointer; }
+        #preview-element { width: auto; height: auto; max-width: 75%; max-height: 75%; object-fit: contain; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -134,7 +135,7 @@
             <div class="form-group" style="margin-bottom: 8px;">
                 <div class="radio-group">
                     <label><input type="radio" name="img-source" value="file" checked> Файл</label>
-                    <label><input type="radio" name="img-source" value="url"> Ссылка (URL)</label>
+                    <label><input type="radio" name="img-source" value="url" title="Используйте для идеального качества"> Ссылка (URL) ⭐️</label>
                 </div>
                 <input type="file" id="image-upload" accept="image/*" style="margin-top:5px;">
                 <input type="text" id="image-url" placeholder="Вставьте прямую ссылку" style="display: none; margin-top:5px;">
@@ -143,10 +144,11 @@
             <div class="form-group" id="compression-container">
                 <div class="range-header">
                     <span>Сжатие файла (Вес) <div id="status-light" class="status-light light-green"></div></span>
-                    <span class="range-value" id="quality-val">300px</span>
+                    <span class="range-value" id="quality-val">150px</span>
                 </div>
-                <input type="range" id="img-quality" min="20" max="400" step="10" value="300">
+                <input type="range" id="img-quality" min="20" max="400" step="10" value="150">
                 <div id="code-size-info" style="font-size: 11px; color: #aaa; text-align: right; margin-top: 4px;">Ожидание...</div>
+                <div style="font-size: 10px; color: #888; text-align: right; margin-top: 2px;">(Отпустите ползунок для сжатия)</div>
             </div>
             
             <div style="display: flex; align-items: center; gap: 8px; margin-top: 10px;">
@@ -313,20 +315,30 @@
     ['ent', 'inf', 'hov', 'clk', 'ext'].forEach(setupStep);
 
     // Связь ползунков
-    const sliders = ['img-quality', 'glow-radius', 'dur-ent', 'del-ent', 'dur-inf', 'dur-hov', 'dur-clk', 'dur-ext', 'del-ext'];
+    const sliders = ['dur-ent', 'del-ent', 'dur-inf', 'dur-hov', 'dur-clk', 'dur-ext', 'del-ext'];
     sliders.forEach(id => {
         const el = document.getElementById(id);
         if(!el) return;
         el.addEventListener('input', (e) => {
-            let val = e.target.value;
-            if(id === 'img-quality') val += 'px';
-            if(id.startsWith('dur') || id.startsWith('del')) val += 's';
-            document.getElementById(id + '-val').innerText = val;
-            
-            if(id === 'img-quality') applyCompression();
-            if(id === 'glow-radius') applyVisuals();
+            document.getElementById(id + '-val').innerText = e.target.value + 's';
         });
     });
+
+    document.getElementById('glow-radius').addEventListener('input', (e) => {
+        document.getElementById('glow-radius-val').innerText = e.target.value;
+        applyVisuals();
+    });
+
+    // ОСОБАЯ ЛОГИКА ДЛЯ ПОЛЗУНКА СЖАТИЯ (БЕЗ ЛАГОВ)
+    const imgQualitySlider = document.getElementById('img-quality');
+    imgQualitySlider.addEventListener('input', (e) => {
+        document.getElementById('quality-val').innerText = e.target.value + 'px';
+        document.getElementById('status-light').className = 'status-light light-yellow';
+        document.getElementById('code-size-info').innerText = 'Отпустите мышку для сжатия...';
+        document.getElementById('code-size-info').style.color = '#ffcc00';
+    });
+    // Сжимаем ТОЛЬКО когда пользователь отпустил мышку
+    imgQualitySlider.addEventListener('change', () => applyCompression());
 
     // --- АВТО-ТЕСТ ---
     const previewEl = document.getElementById('preview-element');
@@ -388,7 +400,8 @@
                 document.querySelector('input[value="file"]').checked = true;
                 document.getElementById('image-upload').style.display = 'block'; document.getElementById('image-url').style.display = 'none';
                 document.getElementById('compression-container').style.display = 'flex';
-                document.getElementById('img-quality').value = 300; document.getElementById('quality-val').innerText = '300px';
+                // Дефолт ставим на 150px для гарантии зеленого света
+                document.getElementById('img-quality').value = 150; document.getElementById('quality-val').innerText = '150px';
                 applyCompression();
             };
             img.src = ev.target.result;
@@ -557,18 +570,14 @@
     }
 
     // --- ЖЕЛЕЗОБЕТОННОЕ КОПИРОВАНИЕ ---
-    document.getElementById('copy-btn').addEventListener('click', function() {
+    document.getElementById('copy-btn').addEventListener('click', async () => {
         if (!currentSrc) { alert("Сначала добавьте картинку!"); return; }
         
         const btn = document.getElementById('copy-btn');
         let codeToCopy = '';
         
-        try { 
-            codeToCopy = genCode(); 
-        } catch (e) { 
-            alert("Ошибка при генерации кода."); 
-            return; 
-        }
+        try { codeToCopy = genCode(); } 
+        catch (e) { alert("Ошибка при генерации кода."); return; }
 
         const successCopy = () => {
             btn.innerText = "✓ КОД СКОПИРОВАН"; 
@@ -581,38 +590,21 @@
             }, 2000);
         };
 
-        // 1. Быстрый метод для строгих браузеров (синхронный)
-        const textArea = document.createElement("textarea");
-        textArea.value = codeToCopy;
-        textArea.style.position = "fixed";
-        textArea.style.top = "0";
-        textArea.style.left = "0";
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-
-        let syncSuccess = false;
         try {
-            syncSuccess = document.execCommand('copy');
-        } catch (err) {}
-        
-        document.body.removeChild(textArea);
-
-        if (syncSuccess) {
+            await navigator.clipboard.writeText(codeToCopy);
             successCopy();
-        } else if (navigator.clipboard && window.isSecureContext) {
-            // 2. Современный метод (если первый не сработал)
-            navigator.clipboard.writeText(codeToCopy)
-                .then(successCopy)
-                .catch(() => {
-                    // 3. Бронебойный метод (всплывающее окно)
-                    window.prompt("Ваш браузер заблокировал кнопку. Нажмите Ctrl+C (или Cmd+C), чтобы скопировать код:", codeToCopy);
-                    successCopy();
-                });
-        } else {
-            // 3. Бронебойный метод (всплывающее окно)
-            window.prompt("Ваш браузер заблокировал кнопку. Нажмите Ctrl+C (или Cmd+C), чтобы скопировать код:", codeToCopy);
-            successCopy();
+        } catch (err) {
+            try {
+                const textArea = document.createElement("textarea");
+                textArea.value = codeToCopy;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                successCopy();
+            } catch (err2) {
+                alert("Ошибка копирования. Ваш браузер блокирует буфер обмена.");
+            }
         }
     });
 </script>

@@ -19,8 +19,7 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            background-color: var(--bg-color); color: var(--text-color);
             margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden;
         }
 
@@ -40,27 +39,23 @@
         .pulsate { animation: softPulse 2.5s infinite ease-in-out; }
         .header-text { display: flex; flex-direction: column; }
         .author-name { font-weight: bold; font-size: 16px; color: var(--primary-color); }
-        .project-title { font-size: 13px; color: #aaa; }
+        .project-title { font-size: 13px; color: #aaa; margin-top: -2px;}
 
-        /* Скроллбары */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: var(--bg-color); }
         ::-webkit-scrollbar-thumb { background: var(--primary-color); border-radius: 3px; }
 
-        .container {
-            display: flex; flex: 1; padding: 15px; gap: 15px; overflow: hidden;
-        }
+        .container { display: flex; flex: 1; padding: 15px; gap: 15px; overflow: hidden; }
 
-        /* Левая панель настроек */
+        /* Левая панель */
         .settings {
             flex: 1; background: var(--panel-bg); padding: 15px 20px;
             border-radius: 10px; border: 1px solid var(--panel-border);
             display: flex; flex-direction: column; gap: 12px;
-            max-width: 420px; overflow-y: auto;
+            max-width: 440px; overflow-y: auto;
         }
-        .settings h2 { margin: 0 0 5px 0; font-size: 18px; color: var(--primary-color); text-align: center; text-transform: uppercase; letter-spacing: 1px;}
+        .settings h2 { margin: 0 0 5px 0; font-size: 18px; color: var(--primary-color); text-align: center; text-transform: uppercase;}
 
-        /* Общие стили форм */
         .form-group { display: flex; flex-direction: column; gap: 5px; }
         label { font-weight: bold; font-size: 12px; color: #bbb; }
         input[type="file"], input[type="text"], select, input[type="color"] {
@@ -74,7 +69,7 @@
         .radio-group { display: flex; gap: 15px; }
         .radio-group label { display: flex; align-items: center; gap: 5px; color: #ddd; cursor: pointer;}
 
-        /* БЛОКИ ТАЙМЛАЙНА (Шаги) */
+        /* Таймлайн-блоки */
         .timeline-step {
             border: 1px solid #444; border-radius: 8px; padding: 10px;
             background: rgba(0,0,0,0.2); transition: border-color 0.3s;
@@ -82,20 +77,19 @@
         .timeline-step.active { border-color: var(--primary-color); box-shadow: inset 0 0 10px rgba(255,102,0,0.05); }
         .step-header { display: flex; align-items: center; gap: 8px; cursor: pointer; }
         .step-header input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--primary-color); cursor: pointer; }
-        .step-header label { font-size: 14px; color: #fff; cursor: pointer; font-weight: normal;}
+        .step-header label { font-size: 14px; color: #fff; cursor: pointer; font-weight: normal; user-select: none; width: 100%;}
         .step-body { display: none; margin-top: 10px; flex-direction: column; gap: 8px; border-top: 1px dashed #444; padding-top: 10px;}
 
-        /* Светофор размера */
+        /* Светофор */
         .status-light { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
         .light-green { background: #00ff00; box-shadow: 0 0 8px #00ff00; }
         .light-red { background: #ff0000; box-shadow: 0 0 8px #ff0000; }
 
-        /* Кнопки */
         .btn-group { display: flex; gap: 10px; margin-top: auto; padding-top: 10px; }
         button {
             flex: 1; background: transparent; color: var(--primary-color);
-            border: 1px solid var(--primary-color); padding: 10px; border-radius: 6px;
-            cursor: pointer; font-weight: bold; font-size: 12px; text-transform: uppercase; transition: 0.3s;
+            border: 1px solid var(--primary-color); padding: 12px; border-radius: 6px;
+            cursor: pointer; font-weight: bold; font-size: 13px; text-transform: uppercase; transition: 0.3s;
         }
         button:hover { background: var(--primary-color); color: #fff; box-shadow: var(--neon-glow); }
         .btn-primary { background: var(--primary-color); color: #fff; }
@@ -105,19 +99,18 @@
             flex: 2; background: #1a1a1a; border-radius: 10px; border: 1px solid var(--panel-border);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             position: relative; background-image: radial-gradient(#333 1px, transparent 1px); background-size: 20px 20px;
+            overflow: hidden;
         }
-        .preview-controls {
-            position: absolute; top: 15px; left: 15px; display: flex; gap: 10px; z-index: 10;
-        }
+        .preview-controls { position: absolute; top: 15px; left: 15px; display: flex; gap: 10px; z-index: 10; }
         .play-btn {
             background: rgba(30,30,30,0.9); color: #fff; border: 1px solid var(--primary-color);
-            padding: 6px 15px; border-radius: 20px; font-size: 12px; cursor: pointer;
-            display: flex; align-items: center; gap: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            padding: 8px 15px; border-radius: 20px; font-size: 12px; cursor: pointer;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
         }
         .play-btn:hover { background: var(--primary-color); }
         
-        #preview-wrapper { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; padding: 40px; box-sizing: border-box; }
-        #preview-element { max-width: 100%; max-height: 100%; object-fit: contain; transform-origin: center; cursor: pointer;}
+        #preview-wrapper { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+        #preview-element { width: 50%; height: auto; max-height: 90%; object-fit: contain; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -134,7 +127,7 @@
 
 <div class="container">
     <div class="settings">
-        <h2>Настройки</h2>
+        <h2>Студия анимации</h2>
         
         <div style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 8px;">
             <div class="form-group" style="margin-bottom: 8px;">
@@ -143,7 +136,7 @@
                     <label><input type="radio" name="img-source" value="url"> Ссылка (URL)</label>
                 </div>
                 <input type="file" id="image-upload" accept="image/*" style="margin-top:5px;">
-                <input type="text" id="image-url" placeholder="Вставьте ссылку" style="display: none; margin-top:5px;">
+                <input type="text" id="image-url" placeholder="Вставьте прямую ссылку" style="display: none; margin-top:5px;">
             </div>
 
             <div class="form-group" id="compression-container">
@@ -152,86 +145,19 @@
                     <span class="range-value" id="quality-val">300px</span>
                 </div>
                 <input type="range" id="img-quality" min="50" max="400" step="10" value="300">
-                <div id="code-size-info" style="font-size: 10px; color: #888; text-align: right;">Ожидание...</div>
             </div>
 
             <div class="form-group" style="margin-top: 5px;">
                 <div class="range-header">
-                    <span>Визуальный масштаб на слайде:</span>
-                    <span class="range-value" id="scale-val">100%</span>
+                    <span>Визуальный масштаб:</span>
+                    <span class="range-value" id="scale-val">50%</span>
                 </div>
-                <input type="range" id="img-scale" min="20" max="150" step="5" value="100">
+                <input type="range" id="img-scale" min="10" max="100" step="5" value="50">
             </div>
-        </div>
-
-        <div style="font-size: 12px; color: var(--primary-color); font-weight: bold; margin-top: 5px;">Цепочка анимаций:</div>
-
-        <div class="timeline-step active" id="step1-container">
-            <div class="step-header">
-                <input type="checkbox" id="step1-enable" checked>
-                <label for="step1-enable">1. При появлении (Вход)</label>
-            </div>
-            <div class="step-body" style="display: flex;">
-                <select id="step1-effect">
-                    <option value="bounceIn">Bounce In (Упругий вылет)</option>
-                    <option value="fadeIn">Fade In (Плавное проявление)</option>
-                    <option value="zoomIn">Zoom In (Увеличение)</option>
-                    <option value="slideInUp">Slide Up (Вылет снизу)</option>
-                    <option value="lightSpeedInRight">Light Speed (Быстрый вылет)</option>
-                </select>
-                <div class="range-header">Длительность: <span class="range-value" id="step1-dur-val">1.0s</span></div>
-                <input type="range" id="step1-dur" min="0.2" max="3" step="0.1" value="1">
-                <div class="range-header">Задержка: <span class="range-value" id="step1-del-val">0.0s</span></div>
-                <input type="range" id="step1-del" min="0" max="3" step="0.1" value="0">
-            </div>
-        </div>
-
-        <div class="timeline-step" id="step2-container">
-            <div class="step-header">
-                <input type="checkbox" id="step2-enable">
-                <label for="step2-enable">2. Фоновый режим (Ожидание)</label>
-            </div>
-            <div class="step-body">
-                <div style="font-size:10px; color:#888;">*Начнется после окончания шага 1</div>
-                <select id="step2-effect">
-                    <option value="pulse">Pulse (Мягкая пульсация)</option>
-                    <option value="heartBeat">HeartBeat (Сердцебиение)</option>
-                    <option value="wobble">Wobble (Качение)</option>
-                    <option value="shakeX">Shake (Тряска)</option>
-                    <option value="tada">Tada (Та-дам!)</option>
-                </select>
-                <div class="range-header">Скорость одного цикла: <span class="range-value" id="step2-dur-val">2.0s</span></div>
-                <input type="range" id="step2-dur" min="0.5" max="5" step="0.5" value="2">
-            </div>
-        </div>
-
-        <div class="timeline-step" id="step3-container">
-            <div class="step-header">
-                <input type="checkbox" id="step3-enable">
-                <label for="step3-enable">3. Действие (Клик / Наведение)</label>
-            </div>
-            <div class="step-body">
-                <select id="step3-trigger">
-                    <option value="click">По клику мышью</option>
-                    <option value="hover">При наведении мыши</option>
-                </select>
-                <select id="step3-effect">
-                    <option value="rubberBand">RubberBand (Резинка)</option>
-                    <option value="jello">Jello (Желе)</option>
-                    <option value="bounce">Bounce (Подпрыгивание)</option>
-                    <option value="flip">Flip (Переворот)</option>
-                    <option value="fadeOut">Fade Out (Исчезновение)</option>
-                    <option value="zoomOut">Zoom Out (Удаление)</option>
-                </select>
-                <div class="range-header">Длительность: <span class="range-value" id="step3-dur-val">1.0s</span></div>
-                <input type="range" id="step3-dur" min="0.2" max="3" step="0.1" value="1">
-            </div>
-        </div>
-
-        <div style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 8px;">
-            <div style="display: flex; align-items: center; gap: 8px;">
+            
+            <div style="display: flex; align-items: center; gap: 8px; margin-top: 10px;">
                 <input type="checkbox" id="glow-toggle">
-                <label for="glow-toggle" style="color:#fff;">Свечение (Тень)</label>
+                <label for="glow-toggle" style="color:#fff;">Включить неоновое свечение</label>
             </div>
             <div id="glow-settings" style="display: none; margin-top: 8px; flex-direction: row; gap: 10px;">
                 <input type="color" id="glow-color" value="#ff6600" style="flex:1; padding:2px;">
@@ -242,310 +168,350 @@
             </div>
         </div>
 
+        <div style="font-size: 13px; color: var(--primary-color); font-weight: bold; margin-top: 5px;">Цепочка (Таймлайн):</div>
+
+        <div class="timeline-step active" id="step-ent">
+            <div class="step-header">
+                <input type="checkbox" id="chk-ent" checked>
+                <label for="chk-ent">1. Появление (Вход)</label>
+            </div>
+            <div class="step-body" style="display: flex;">
+                <select id="sel-ent" class="anim-select"></select>
+                <div class="range-header">Длительность: <span class="range-value" id="dur-ent-val">1.0s</span></div>
+                <input type="range" id="dur-ent" min="0.2" max="4" step="0.1" value="1">
+                <div class="range-header">Задержка до старта: <span class="range-value" id="del-ent-val">0.0s</span></div>
+                <input type="range" id="del-ent" min="0" max="5" step="0.1" value="0">
+            </div>
+        </div>
+
+        <div class="timeline-step" id="step-inf">
+            <div class="step-header">
+                <input type="checkbox" id="chk-inf">
+                <label for="chk-inf">2. Фоновая анимация</label>
+            </div>
+            <div class="step-body">
+                <select id="sel-inf" class="anim-select"></select>
+                <div class="range-header">Длительность цикла: <span class="range-value" id="dur-inf-val">2.0s</span></div>
+                <input type="range" id="dur-inf" min="0.5" max="5" step="0.5" value="2">
+            </div>
+        </div>
+
+        <div class="timeline-step" id="step-hov">
+            <div class="step-header">
+                <input type="checkbox" id="chk-hov">
+                <label for="chk-hov">3. При наведении мыши</label>
+            </div>
+            <div class="step-body">
+                <select id="sel-hov" class="anim-select"></select>
+                <div class="range-header">Длительность: <span class="range-value" id="dur-hov-val">1.0s</span></div>
+                <input type="range" id="dur-hov" min="0.2" max="3" step="0.1" value="1">
+            </div>
+        </div>
+
+        <div class="timeline-step" id="step-clk">
+            <div class="step-header">
+                <input type="checkbox" id="chk-clk">
+                <label for="chk-clk">4. По клику</label>
+            </div>
+            <div class="step-body">
+                <select id="sel-clk" class="anim-select"></select>
+                <div class="range-header">Длительность: <span class="range-value" id="dur-clk-val">1.0s</span></div>
+                <input type="range" id="dur-clk" min="0.2" max="3" step="0.1" value="1">
+            </div>
+        </div>
+
+        <div class="timeline-step" id="step-ext">
+            <div class="step-header">
+                <input type="checkbox" id="chk-ext">
+                <label for="chk-ext">5. Уход (Исчезновение)</label>
+            </div>
+            <div class="step-body">
+                <div style="font-size:10px; color:#888; margin-bottom:5px;">Сработает автоматически по таймеру с момента появления слайда.</div>
+                <select id="sel-ext" class="anim-select"></select>
+                <div class="range-header">Длительность: <span class="range-value" id="dur-ext-val">1.0s</span></div>
+                <input type="range" id="dur-ext" min="0.2" max="4" step="0.1" value="1">
+                <div class="range-header">Задержка ПЕРЕД уходом: <span class="range-value" id="del-ext-val">5.0s</span></div>
+                <input type="range" id="del-ext" min="1" max="20" step="0.5" value="5">
+            </div>
+        </div>
+
         <div class="btn-group">
-            <button id="copy-btn" class="btn-primary">КОПИРОВАТЬ КОД</button>
+            <button id="copy-btn" class="btn-primary">КОПИРОВАТЬ КОД ДЛЯ GENIALLY</button>
         </div>
     </div>
 
-    <div class="preview-area" id="drop-zone">
+    <div class="preview-area">
         <div class="preview-controls">
-            <button id="play-preview-btn" class="play-btn">▶ ВОСПРОИЗВЕСТИ СНАЧАЛА</button>
+            <button id="play-btn" class="play-btn">▶ ВОСПРОИЗВЕСТИ ЦЕПОЧКУ</button>
         </div>
         <div id="preview-wrapper">
-            <img id="preview-element" src="https://via.placeholder.com/200x150/2a2a2a/ff6600?text=Загрузите+картинку" alt="Preview">
+            <img id="preview-element" src="https://via.placeholder.com/300x200/2a2a2a/ff6600?text=Загрузите+картинку" alt="Preview">
         </div>
     </div>
 </div>
 
 <script>
-    // Логика интерфейса (Скрытие/Раскрытие шагов)
-    function setupTimelineStep(enableId, bodyId, containerId) {
-        const checkbox = document.getElementById(enableId);
-        const body = document.getElementById(bodyId);
-        const container = document.getElementById(containerId);
-        
-        checkbox.addEventListener('change', () => {
-            body.style.display = checkbox.checked ? 'flex' : 'none';
-            container.className = checkbox.checked ? 'timeline-step active' : 'timeline-step';
-            updatePreviewLogic(); // Перезапускаем превью при смене настроек
-        });
-    }
-    setupTimelineStep('step1-enable', 'step1-container .step-body', 'step1-container');
-    setupTimelineStep('step2-enable', 'step2-container .step-body', 'step2-container');
-    setupTimelineStep('step3-enable', 'step3-container .step-body', 'step3-container');
+    // --- СПИСКИ АНИМАЦИЙ ---
+    const animGroups = {
+        "Внимание (Прыжки, Пульс)": ["bounce", "flash", "pulse", "rubberBand", "shakeX", "shakeY", "headShake", "swing", "tada", "wobble", "jello", "heartBeat"],
+        "Появление (Вылет)": ["backInDown", "backInUp", "bounceIn", "bounceInDown", "bounceInLeft", "bounceInRight", "bounceInUp", "fadeIn", "fadeInDown", "fadeInLeft", "fadeInRight", "fadeInUp", "flipInX", "flipInY", "lightSpeedInRight", "lightSpeedInLeft", "rotateIn", "zoomIn", "slideInUp", "slideInDown", "slideInLeft", "slideInRight"],
+        "Исчезновение (Уход)": ["backOutDown", "backOutUp", "bounceOut", "bounceOutDown", "fadeOut", "fadeOutDown", "flipOutX", "flipOutY", "lightSpeedOutRight", "rotateOut", "zoomOut", "slideOutDown", "slideOutUp", "hinge"]
+    };
 
-    // Обновление цифр ползунков
-    const ranges = [
-        {id: 'img-scale', valId: 'scale-val', suffix: '%'},
-        {id: 'img-quality', valId: 'quality-val', suffix: 'px'},
-        {id: 'step1-dur', valId: 'step1-dur-val', suffix: 's'},
-        {id: 'step1-del', valId: 'step1-del-val', suffix: 's'},
-        {id: 'step2-dur', valId: 'step2-dur-val', suffix: 's'},
-        {id: 'step3-dur', valId: 'step3-dur-val', suffix: 's'},
-        {id: 'glow-radius', valId: 'glow-radius-val', suffix: ''}
-    ];
-    ranges.forEach(r => {
-        const el = document.getElementById(r.id);
-        el.addEventListener('input', (e) => {
-            document.getElementById(r.valId).innerText = e.target.value + r.suffix;
-            if(r.id === 'img-quality' || r.id === 'img-scale') applyCompression();
-        });
-    });
-
-    // Обработка загрузки картинки (Файл / Ссылка)
-    const sourceRadios = document.querySelectorAll('input[name="img-source"]');
-    const imageUpload = document.getElementById('image-upload');
-    const imageUrl = document.getElementById('image-url');
-    const compressionContainer = document.getElementById('compression-container');
-    const previewElement = document.getElementById('preview-element');
-    
-    let currentImageSrc = '';
-    let originalLoadedImage = null;
-
-    sourceRadios.forEach(radio => {
-        radio.addEventListener('change', (e) => {
-            if (e.target.value === 'file') {
-                imageUpload.style.display = 'block'; imageUrl.style.display = 'none';
-                compressionContainer.style.display = originalLoadedImage ? 'flex' : 'none';
-            } else {
-                imageUpload.style.display = 'none'; imageUrl.style.display = 'block';
-                compressionContainer.style.display = 'none';
-            }
-            checkCodeSize();
-        });
-    });
-
-    imageUrl.addEventListener('input', (e) => {
-        if (e.target.value) {
-            currentImageSrc = e.target.value;
-            previewElement.src = currentImageSrc;
-            playPreviewSequence(); checkCodeSize();
+    // Заполнение выпадающих списков
+    document.querySelectorAll('.anim-select').forEach(select => {
+        for (const [group, anims] of Object.entries(animGroups)) {
+            const optgroup = document.createElement('optgroup');
+            optgroup.label = group;
+            anims.forEach(anim => {
+                const opt = document.createElement('option');
+                opt.value = anim; opt.innerText = anim;
+                optgroup.appendChild(opt);
+            });
+            select.appendChild(optgroup);
         }
     });
 
-    function handleFile(file) {
-        if (!file || !file.type.startsWith('image/')) return;
+    // Установка логичных дефолтов
+    document.getElementById('sel-ent').value = 'bounceIn';
+    document.getElementById('sel-inf').value = 'pulse';
+    document.getElementById('sel-hov').value = 'tada';
+    document.getElementById('sel-clk').value = 'rubberBand';
+    document.getElementById('sel-ext').value = 'zoomOut';
+
+    // --- ЛОГИКА ИНТЕРФЕЙСА (Раскрытие шагов) ---
+    function setupStep(stepId) {
+        const chk = document.getElementById(`chk-${stepId}`);
+        const container = document.getElementById(`step-${stepId}`);
+        const body = container.querySelector('.step-body');
+        
+        chk.addEventListener('change', () => {
+            body.style.display = chk.checked ? 'flex' : 'none';
+            container.className = chk.checked ? 'timeline-step active' : 'timeline-step';
+            playPreview(); checkCodeSize();
+        });
+        // Раскрыть, если отмечено по умолчанию
+        if(chk.checked) { body.style.display = 'flex'; container.className = 'timeline-step active'; }
+    }
+    ['ent', 'inf', 'hov', 'clk', 'ext'].forEach(setupStep);
+
+    // Связь ползунков и текста
+    const sliders = ['img-scale', 'img-quality', 'glow-radius', 'dur-ent', 'del-ent', 'dur-inf', 'dur-hov', 'dur-clk', 'dur-ext', 'del-ext'];
+    sliders.forEach(id => {
+        const el = document.getElementById(id);
+        if(!el) return;
+        el.addEventListener('input', (e) => {
+            let val = e.target.value;
+            if(id === 'img-scale') val += '%';
+            if(id === 'img-quality') val += 'px';
+            if(id.startsWith('dur') || id.startsWith('del')) val += 's';
+            document.getElementById(id + '-val').innerText = val;
+            
+            if(id === 'img-quality') applyCompression();
+            if(id === 'img-scale' || id === 'glow-radius') applyVisuals();
+        });
+    });
+
+    // --- ЗАГРУЗКА И СЖАТИЕ ---
+    const previewEl = document.getElementById('preview-element');
+    let currentSrc = ''; let originalImg = null;
+
+    document.querySelectorAll('input[name="img-source"]').forEach(r => r.addEventListener('change', e => {
+        document.getElementById('image-upload').style.display = e.target.value === 'file' ? 'block' : 'none';
+        document.getElementById('image-url').style.display = e.target.value === 'url' ? 'block' : 'none';
+        document.getElementById('compression-container').style.display = (e.target.value === 'file' && originalImg) ? 'flex' : 'none';
+        checkCodeSize();
+    }));
+
+    document.getElementById('image-url').addEventListener('input', e => {
+        if (e.target.value) { currentSrc = e.target.value; applyVisuals(); checkCodeSize(); playPreview(); }
+    });
+
+    document.getElementById('image-upload').addEventListener('change', e => {
+        const file = e.target.files[0];
+        if (!file) return;
         const reader = new FileReader();
-        reader.onload = function(event) {
+        reader.onload = ev => {
             const img = new Image();
-            img.onload = function() {
-                originalLoadedImage = img;
-                document.querySelector('input[value="file"]').checked = true;
-                imageUpload.style.display = 'block'; imageUrl.style.display = 'none';
-                compressionContainer.style.display = 'flex';
+            img.onload = () => {
+                originalImg = img;
+                document.getElementById('compression-container').style.display = 'flex';
                 document.getElementById('img-quality').value = 300;
                 document.getElementById('quality-val').innerText = '300px';
                 applyCompression();
-            }
-            img.src = event.target.result;
-        }
+            };
+            img.src = ev.target.result;
+        };
         reader.readAsDataURL(file);
-    }
-    imageUpload.addEventListener('change', (e) => handleFile(e.target.files[0]));
-
-    function applyCompression() {
-        if (!originalLoadedImage) return;
-        const canvas = document.createElement('canvas');
-        const targetWidth = parseInt(document.getElementById('img-quality').value); 
-        let width = originalLoadedImage.width; let height = originalLoadedImage.height;
-        if (width > targetWidth) { height *= targetWidth / width; width = targetWidth; }
-        
-        canvas.width = width; canvas.height = height;
-        canvas.getContext('2d').drawImage(originalLoadedImage, 0, 0, width, height);
-        currentImageSrc = canvas.toDataURL('image/webp', 0.85);
-        previewElement.src = currentImageSrc;
-        
-        // Визуальный масштаб
-        const scale = document.getElementById('img-scale').value / 100;
-        previewElement.style.transform = `scale(${scale})`;
-        
-        playPreviewSequence();
-        checkCodeSize();
-    }
-
-    // Включение/выключение свечения
-    document.getElementById('glow-toggle').addEventListener('change', function() {
-        document.getElementById('glow-settings').style.display = this.checked ? 'flex' : 'none';
-        playPreviewSequence(); checkCodeSize();
     });
 
-    // Слушатели изменения любых настроек анимации
-    const animInputs = document.querySelectorAll('#step1-effect, #step2-effect, #step3-effect, #step3-trigger, #glow-color, input[type="range"]');
-    animInputs.forEach(input => input.addEventListener('change', updatePreviewLogic));
-
-    function updatePreviewLogic() {
-        // Меняем масштаб и тень без перезапуска всей анимации, если можно
-        const scale = document.getElementById('img-scale').value / 100;
-        previewElement.style.transform = `scale(${scale})`;
-        if (document.getElementById('glow-toggle').checked) {
-            const r = document.getElementById('glow-radius').value;
-            const c = document.getElementById('glow-color').value;
-            previewElement.style.filter = `drop-shadow(0 0 ${r}px ${c})`;
-        } else {
-            previewElement.style.filter = 'none';
-        }
-        checkCodeSize();
+    function applyCompression() {
+        if (!originalImg) return;
+        const canvas = document.createElement('canvas');
+        const tgtWidth = parseInt(document.getElementById('img-quality').value); 
+        let w = originalImg.width, h = originalImg.height;
+        if (w > tgtWidth) { h *= tgtWidth / w; w = tgtWidth; }
+        
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(originalImg, 0, 0, w, h);
+        currentSrc = canvas.toDataURL('image/webp', 0.85);
+        applyVisuals(); checkCodeSize(); playPreview();
     }
 
-    // --- СЕРДЦЕ РЕДАКТОРА: ЛОГИКА ТАЙМЛАЙНА ДЛЯ ПРЕВЬЮ ---
-    document.getElementById('play-preview-btn').addEventListener('click', playPreviewSequence);
+    // --- ВИЗУАЛ (Масштаб и Свечение) ---
+    document.getElementById('glow-toggle').addEventListener('change', function() {
+        document.getElementById('glow-settings').style.display = this.checked ? 'flex' : 'none';
+        applyVisuals(); playPreview();
+    });
+    document.getElementById('glow-color').addEventListener('input', applyVisuals);
 
-    function playPreviewSequence() {
-        if (!currentImageSrc) return;
+    function applyVisuals() {
+        if(!currentSrc) return;
+        previewEl.src = currentSrc;
+        // МАСШТАБ РАБОТАЕТ ПРАВИЛЬНО (через width картинки!)
+        previewEl.style.width = document.getElementById('img-scale').value + '%';
         
-        // Очищаем старые классы и события
-        previewElement.className = '';
-        previewElement.style.animationDuration = '';
-        previewElement.style.animationDelay = '';
-        previewElement.onmouseenter = null;
-        previewElement.onmouseleave = null;
-        previewElement.onclick = null;
-        // Хак для принудительного сброса анимации
-        void previewElement.offsetWidth; 
-
-        // Читаем конфиг
-        const s1 = document.getElementById('step1-enable').checked;
-        const s2 = document.getElementById('step2-enable').checked;
-        const s3 = document.getElementById('step3-enable').checked;
-
-        function startInfinite() {
-            if(!s2) return;
-            previewElement.className = `animate__animated animate__${document.getElementById('step2-effect').value} animate__infinite`;
-            previewElement.style.animationDuration = document.getElementById('step2-dur').value + 's';
-            previewElement.style.animationDelay = '0s';
+        if (document.getElementById('glow-toggle').checked) {
+            previewEl.style.filter = `drop-shadow(0 0 ${document.getElementById('glow-radius').value}px ${document.getElementById('glow-color').value})`;
+        } else {
+            previewEl.style.filter = 'none';
         }
+    }
 
-        function playAction() {
-            if(!s3) return;
-            const actClass = document.getElementById('step3-effect').value;
-            previewElement.className = `animate__animated animate__${actClass}`;
-            previewElement.style.animationDuration = document.getElementById('step3-dur').value + 's';
-            previewElement.style.animationDelay = '0s';
-            
-            // Если анимация - исчезновение, не возвращаем пульсацию
-            if(!actClass.toLowerCase().includes('out')) {
-                previewElement.addEventListener('animationend', function handler() {
-                    previewElement.removeEventListener('animationend', handler);
-                    startInfinite();
-                }, {once:true});
+    // --- ЦЕНТРАЛЬНЫЙ ПЛЕЕР (Для превью и для iframe) ---
+    document.getElementById('play-btn').addEventListener('click', playPreview);
+    
+    let exitTimer = null; // Для остановки таймера выхода при перезапуске
+
+    function playPreview() {
+        if(!currentSrc) return;
+        
+        // Сброс всего
+        previewEl.className = '';
+        previewEl.style.animationDuration = ''; previewEl.style.animationDelay = '';
+        previewEl.onmouseenter = null; previewEl.onmouseleave = null; previewEl.onclick = null;
+        previewEl.style.opacity = 1;
+        clearTimeout(exitTimer);
+        void previewEl.offsetWidth; // Хак перезапуска
+        
+        const cfg = getCfg();
+        let state = 'init';
+
+        function playAnim(effect, dur, del, isInf, onEnd) {
+            previewEl.className = `animate__animated animate__${effect}` + (isInf ? ' animate__infinite' : '');
+            previewEl.style.animationDuration = dur;
+            previewEl.style.animationDelay = del;
+            if(onEnd && !isInf) {
+                previewEl.addEventListener('animationend', function h(e) {
+                    e.stopPropagation(); previewEl.removeEventListener('animationend', h); onEnd();
+                }, {once: true});
             }
         }
 
-        // Навешиваем триггеры действий
-        if(s3) {
-            if(document.getElementById('step3-trigger').value === 'hover') {
-                previewElement.onmouseenter = playAction;
-            } else {
-                previewElement.onclick = playAction;
-            }
+        function inf() {
+            if(!cfg.iOn || state === 'ext') return;
+            state = 'inf'; playAnim(cfg.iEff, cfg.iDur, '0s', true, null);
+        }
+
+        // Таймер Выхода
+        if(cfg.xOn) {
+            exitTimer = setTimeout(() => {
+                state = 'ext';
+                playAnim(cfg.xEff, cfg.xDur, '0s', false, () => { previewEl.style.opacity = 0; });
+            }, parseFloat(cfg.xDel) * 1000);
+        }
+
+        // Клик
+        if(cfg.cOn) {
+            previewEl.onclick = () => {
+                if(state === 'ext' || state === 'clk') return;
+                state = 'clk'; playAnim(cfg.cEff, cfg.cDur, '0s', false, inf);
+            };
+        }
+
+        // Наведение
+        if(cfg.hOn) {
+            previewEl.onmouseenter = () => {
+                if(state === 'ext' || state === 'clk' || state === 'ent') return;
+                state = 'hov'; playAnim(cfg.hEff, cfg.hDur, '0s', true, null);
+            };
+            previewEl.onmouseleave = () => {
+                if(state === 'ext' || state === 'clk' || state === 'ent') return;
+                inf();
+            };
         }
 
         // Запуск
-        if (s1) {
-            previewElement.className = `animate__animated animate__${document.getElementById('step1-effect').value}`;
-            previewElement.style.animationDuration = document.getElementById('step1-dur').value + 's';
-            previewElement.style.animationDelay = document.getElementById('step1-del').value + 's';
-            
-            previewElement.addEventListener('animationend', function handler(e) {
-                // Предотвращаем срабатывание от внутренних эффектов animate.css
-                e.stopPropagation();
-                previewElement.removeEventListener('animationend', handler);
-                startInfinite();
-            }, {once:true});
+        if(cfg.eOn) {
+            state = 'ent'; playAnim(cfg.eEff, cfg.eDur, cfg.eDel, false, inf);
         } else {
-            startInfinite();
+            inf();
         }
     }
 
-
-    // --- ГЕНЕРАЦИЯ КОДА ДЛЯ GENIALLY ---
-    function generateCodeSnippet() {
-        const scale = document.getElementById('img-scale').value / 100;
-        const glow = document.getElementById('glow-toggle').checked ? `filter: drop-shadow(0 0 ${document.getElementById('glow-radius').value}px ${document.getElementById('glow-color').value});` : '';
-        const combinedScale = 0.75 * scale; // 75% - базовая воздушная подушка
-
-        // Собираем конфиг для JS внутри iframe
-        const cfg = {
-            s1: document.getElementById('step1-enable').checked,
-            s1c: document.getElementById('step1-effect').value,
-            s1dur: document.getElementById('step1-dur').value + 's',
-            s1del: document.getElementById('step1-del').value + 's',
-            
-            s2: document.getElementById('step2-enable').checked,
-            s2c: document.getElementById('step2-effect').value,
-            s2dur: document.getElementById('step2-dur').value + 's',
-            
-            s3: document.getElementById('step3-enable').checked,
-            s3tr: document.getElementById('step3-trigger').value,
-            s3c: document.getElementById('step3-effect').value,
-            s3dur: document.getElementById('step3-dur').value + 's',
+    // --- ГЕНЕРАЦИЯ КОДА ---
+    function getCfg() {
+        return {
+            eOn: document.getElementById('chk-ent').checked, eEff: document.getElementById('sel-ent').value, eDur: document.getElementById('dur-ent').value + 's', eDel: document.getElementById('del-ent').value + 's',
+            iOn: document.getElementById('chk-inf').checked, iEff: document.getElementById('sel-inf').value, iDur: document.getElementById('dur-inf').value + 's',
+            hOn: document.getElementById('chk-hov').checked, hEff: document.getElementById('sel-hov').value, hDur: document.getElementById('dur-hov').value + 's',
+            cOn: document.getElementById('chk-clk').checked, cEff: document.getElementById('sel-clk').value, cDur: document.getElementById('dur-clk').value + 's',
+            xOn: document.getElementById('chk-ext').checked, xEff: document.getElementById('sel-ext').value, xDur: document.getElementById('dur-ext').value + 's', xDel: document.getElementById('del-ext').value
         };
+    }
 
-        // JS код, который будет управлять анимацией внутри Genially
-        const scriptLogic = `
-            const img = document.getElementById('el');
-            function inf(){
-                if(!${cfg.s2}) return;
-                img.className = 'gen-img animate__animated animate__${cfg.s2c} animate__infinite';
-                img.style.animationDuration = '${cfg.s2dur}';
-                img.style.animationDelay = '0s';
+    function genCode() {
+        const c = getCfg();
+        const sc = document.getElementById('img-scale').value;
+        const gl = document.getElementById('glow-toggle').checked ? `filter: drop-shadow(0 0 ${document.getElementById('glow-radius').value}px ${document.getElementById('glow-color').value});` : '';
+
+        const script = `
+            const el=document.getElementById('el'); let st='init';
+            function p(eff,dur,del,inf,end){
+                el.className='gen-img animate__animated animate__'+eff+(inf?' animate__infinite':'');
+                el.style.animationDuration=dur; el.style.animationDelay=del;
+                if(end&&!inf) el.addEventListener('animationend',function h(e){e.stopPropagation();el.removeEventListener('animationend',h);end();},{once:true});
             }
-            function act(){
-                if(!${cfg.s3}) return;
-                img.className = 'gen-img animate__animated animate__${cfg.s3c}';
-                img.style.animationDuration = '${cfg.s3dur}';
-                img.style.animationDelay = '0s';
-                if(!'${cfg.s3c}'.toLowerCase().includes('out')){
-                    img.addEventListener('animationend', function h(e){ e.stopPropagation(); img.removeEventListener('animationend',h); inf(); }, {once:true});
-                }
-            }
-            if(${cfg.s3}){ if('${cfg.s3tr}'==='hover') img.onmouseenter=act; else img.onclick=act; }
-            if(${cfg.s1}){
-                img.className = 'gen-img animate__animated animate__${cfg.s1c}';
-                img.style.animationDuration = '${cfg.s1dur}';
-                img.style.animationDelay = '${cfg.s1del}';
-                img.addEventListener('animationend', function h(e){ e.stopPropagation(); img.removeEventListener('animationend',h); inf(); }, {once:true});
-            } else { inf(); }
+            function inf(){ if(!${c.iOn}||st==='ext') return; st='inf'; p('${c.iEff}','${c.iDur}','0s',true,null); }
+            if(${c.xOn}) setTimeout(()=>{ st='ext'; p('${c.xEff}','${c.xDur}','0s',false,()=>{el.style.opacity=0;}); }, ${parseFloat(c.xDel)*1000});
+            if(${c.cOn}) el.onclick=()=>{ if(st==='ext'||st==='clk') return; st='clk'; p('${c.cEff}','${c.cDur}','0s',false,inf); };
+            if(${c.hOn}){ el.onmouseenter=()=>{ if(st==='ext'||st==='clk'||st==='ent') return; st='hov'; p('${c.hEff}','${c.hDur}','0s',true,null); }; el.onmouseleave=()=>{ if(st==='ext'||st==='clk'||st==='ent') return; inf(); }; }
+            if(${c.eOn}){ st='ent'; p('${c.eEff}','${c.eDur}','${c.eDel}',false,inf); } else { inf(); }
         `;
 
-        let innerHTML = `
+        const html = `
             <style>
                 @import url('https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css');
-                body { margin:0; padding:0; display:flex; justify-content:center; align-items:center; width:100vw; height:100vh; background:transparent; overflow:hidden;}
-                .wrap { display:flex; justify-content:center; align-items:center; width:calc(${combinedScale*100}%); height:calc(${combinedScale*100}%); }
-                .gen-img { width:100%; height:100%; object-fit:contain; cursor:pointer; ${glow} }
+                body{margin:0;padding:0;display:flex;justify-content:center;align-items:center;width:100vw;height:100vh;background:transparent;overflow:hidden;}
+                .wrap{display:flex;justify-content:center;align-items:center;width:100%;height:100%;}
+                .gen-img{width:${sc}%;height:auto;max-height:95vh;object-fit:contain;cursor:pointer;${gl}}
             </style>
-            <div class="wrap"><img id="el" src="${currentImageSrc}" class="gen-img" /></div>
-            <script>${scriptLogic}<\/script>
+            <div class="wrap"><img id="el" src="${currentImageSrc}" class="gen-img"/></div>
+            <script>${script}<\/script>
         `;
-
-        const escapedHTML = innerHTML.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/'/g, "&#39;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-        return `<iframe style="width:100%; height:100%; border:none; background:transparent;" allowtransparency="true" srcdoc="${escapedHTML}"></iframe>`;
+        return `<iframe style="width:100%; height:100%; border:none; background:transparent;" allowtransparency="true" srcdoc="${html.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/'/g, "&#39;").replace(/</g, "&lt;").replace(/>/g, "&gt;")}"></iframe>`;
     }
 
     function checkCodeSize() {
-        if (!currentImageSrc) return;
-        const sLight = document.getElementById('status-light');
-        const sInfo = document.getElementById('code-size-info');
-        
+        if (!currentSrc) return;
+        const l = document.getElementById('status-light'), i = document.getElementById('code-size-info');
         if (document.querySelector('input[name="img-source"]:checked').value === 'url') {
-            sLight.className = 'status-light light-green'; sInfo.innerText = 'URL: Легкий код!'; sInfo.style.color = '#00ff00'; return;
+            l.className = 'status-light light-green'; i.innerText = 'URL: Идеальный вес!'; i.style.color = '#00ff00'; return;
         }
-
-        const len = generateCodeSnippet().length;
+        const len = genCode().length;
         if (len > 12000) {
-            sLight.className = 'status-light light-red'; sInfo.innerText = `Вес: ${Math.round(len/1024)}KB (Тяжелый! Уменьшите размер)`; sInfo.style.color = '#ff4444';
+            l.className = 'status-light light-red'; i.innerText = `Вес: ${Math.round(len/1024)}KB (Не влезет в Genially)`; i.style.color = '#ff4444';
         } else {
-            sLight.className = 'status-light light-green'; sInfo.innerText = `Вес: ${Math.round(len/1024)}KB (Можно копировать!)`; sInfo.style.color = '#00ff00';
+            l.className = 'status-light light-green'; i.innerText = `Вес: ${Math.round(len/1024)}KB (Код скопируется!)`; i.style.color = '#00ff00';
         }
     }
 
     document.getElementById('copy-btn').addEventListener('click', () => {
-        if (!currentImageSrc) { alert("Сначала загрузите картинку!"); return; }
+        if (!currentSrc) { alert("Сначала добавьте картинку!"); return; }
         const btn = document.getElementById('copy-btn');
-        navigator.clipboard.writeText(generateCodeSnippet()).then(() => {
-            btn.innerText = "✓ СКОПИРОВАНО В БУФЕР"; btn.style.background = "#fff"; btn.style.color = "#ff6600";
-            setTimeout(() => { btn.innerText = "КОПИРОВАТЬ КОД"; btn.style.background = ""; btn.style.color = ""; }, 2000);
+        navigator.clipboard.writeText(genCode()).then(() => {
+            btn.innerText = "✓ КОД В БУФЕРЕ"; btn.style.background = "#fff"; btn.style.color = "#ff6600";
+            setTimeout(() => { btn.innerText = "КОПИРОВАТЬ КОД ДЛЯ GENIALLY"; btn.style.background = ""; btn.style.color = ""; }, 2000);
         });
     });
 </script>

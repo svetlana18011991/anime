@@ -112,13 +112,8 @@
         
         #preview-wrapper { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         
-        /* КОРОБКА МАСШТАБА (Секрет рабочего ползунка) */
-        #scale-wrapper {
-            display: flex; align-items: center; justify-content: center;
-            width: 50%; height: 50%; /* Дефолтный 50% */
-        }
-
-        #preview-element { width: 100%; height: 100%; object-fit: contain; cursor: pointer; }
+        /* Встроенная воздушная подушка в самом превью (75%) */
+        #preview-element { width: auto; height: auto; max-width: 75%; max-height: 75%; object-fit: contain; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -153,14 +148,6 @@
                     <span class="range-value" id="quality-val">300px</span>
                 </div>
                 <input type="range" id="img-quality" min="50" max="400" step="10" value="300">
-            </div>
-
-            <div class="form-group" style="margin-top: 5px;">
-                <div class="range-header">
-                    <span>Визуальный масштаб:</span>
-                    <span class="range-value" id="scale-val">50%</span>
-                </div>
-                <input type="range" id="img-scale" min="10" max="150" step="5" value="50">
             </div>
             
             <div style="display: flex; align-items: center; gap: 8px; margin-top: 10px;">
@@ -254,9 +241,7 @@
             <span id="demo-indicator">Авто-тест...</span>
         </div>
         <div id="preview-wrapper">
-            <div id="scale-wrapper">
-                <img id="preview-element" src="https://via.placeholder.com/300x200/2a2a2a/ff6600?text=Загрузите+картинку" alt="Preview">
-            </div>
+            <img id="preview-element" src="https://via.placeholder.com/300x200/2a2a2a/ff6600?text=Загрузите+картинку" alt="Preview">
         </div>
     </div>
 </div>
@@ -335,7 +320,7 @@
     document.getElementById('sel-clk').value = 'rubberBand';
     document.getElementById('sel-ext').value = 'zoomOut';
 
-    // --- ЛОГИКА ГАЛОЧЕК (Раскрытие шагов) ---
+    // --- ЛОГИКА ГАЛОЧЕК ---
     function setupStep(stepId) {
         const chk = document.getElementById(`chk-${stepId}`);
         const container = document.getElementById(`step-${stepId}`);
@@ -350,26 +335,24 @@
     }
     ['ent', 'inf', 'hov', 'clk', 'ext'].forEach(setupStep);
 
-    // Связь ползунков и текста
-    const sliders = ['img-scale', 'img-quality', 'glow-radius', 'dur-ent', 'del-ent', 'dur-inf', 'dur-hov', 'dur-clk', 'dur-ext', 'del-ext'];
+    // Связь ползунков
+    const sliders = ['img-quality', 'glow-radius', 'dur-ent', 'del-ent', 'dur-inf', 'dur-hov', 'dur-clk', 'dur-ext', 'del-ext'];
     sliders.forEach(id => {
         const el = document.getElementById(id);
         if(!el) return;
         el.addEventListener('input', (e) => {
             let val = e.target.value;
-            if(id === 'img-scale') val += '%';
             if(id === 'img-quality') val += 'px';
             if(id.startsWith('dur') || id.startsWith('del')) val += 's';
             document.getElementById(id + '-val').innerText = val;
             
             if(id === 'img-quality') applyCompression();
-            if(id === 'img-scale' || id === 'glow-radius') applyVisuals();
+            if(id === 'glow-radius') applyVisuals();
         });
     });
 
-    // --- АВТО-ТЕСТ (Мгновенный предпросмотр) ---
+    // --- АВТО-ТЕСТ ---
     const previewEl = document.getElementById('preview-element');
-    const scaleWrapper = document.getElementById('scale-wrapper');
     let currentSrc = ''; let originalImg = null; let demoTimer = null;
 
     function triggerDemo(step) {
@@ -397,7 +380,7 @@
             previewEl.addEventListener('animationend', function h() {
                 previewEl.removeEventListener('animationend', h);
                 ind.style.display = 'none';
-                playPreviewSequence(); // Возвращаем в нормальный режим цепочки
+                playPreviewSequence(); 
             }, {once:true});
         } else {
             demoTimer = setTimeout(() => { 
@@ -407,7 +390,6 @@
         }
     }
 
-    // Привязываем авто-тест к селектам
     ['ent', 'inf', 'hov', 'clk', 'ext'].forEach(step => {
         document.getElementById(`sel-${step}`).addEventListener('change', () => triggerDemo(step));
     });
@@ -456,7 +438,7 @@
         applyVisuals(); checkCodeSize(); playPreviewSequence();
     }
 
-    // --- ВИЗУАЛ (Ремонт масштаба!) ---
+    // --- СВЕЧЕНИЕ ---
     document.getElementById('glow-toggle').addEventListener('change', function() {
         document.getElementById('glow-settings').style.display = this.checked ? 'flex' : 'none';
         applyVisuals();
@@ -467,11 +449,6 @@
         if(!currentSrc) return;
         previewEl.src = currentSrc;
         
-        // ВАЖНО: Мы меняем ширину/высоту ОБЕРТКИ (коробки). Анимация внутри коробки не будет ломать размер!
-        const scaleVal = document.getElementById('img-scale').value;
-        scaleWrapper.style.width = scaleVal + '%';
-        scaleWrapper.style.height = scaleVal + '%';
-        
         if (document.getElementById('glow-toggle').checked) {
             previewEl.style.filter = `drop-shadow(0 0 ${document.getElementById('glow-radius').value}px ${document.getElementById('glow-color').value})`;
         } else {
@@ -479,7 +456,7 @@
         }
     }
 
-    // --- ЦЕНТРАЛЬНЫЙ ПЛЕЕР (Цепочка) ---
+    // --- ПЛЕЕР ---
     document.getElementById('play-btn').addEventListener('click', playPreviewSequence);
     let exitTimer = null;
 
@@ -555,7 +532,6 @@
 
     function genCode() {
         const c = getCfg();
-        const sc = document.getElementById('img-scale').value; // Берем масштаб
         const gl = document.getElementById('glow-toggle').checked ? `filter: drop-shadow(0 0 ${document.getElementById('glow-radius').value}px ${document.getElementById('glow-color').value});` : '';
 
         const script = `
@@ -572,15 +548,14 @@
             if(${c.eOn}){ st='ent'; p('${c.eEff}','${c.eDur}','${c.eDel}',false,inf); } else { inf(); }
         `;
 
-        // Идеальный масштаб для Genially - меняем коробку, а не картинку!
+        // ВАЖНО: Встроенная авто-подушка max-width: 75% и max-height: 75%
         const html = `
             <style>
                 @import url('https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css');
                 body{margin:0;padding:0;display:flex;justify-content:center;align-items:center;width:100vw;height:100vh;background:transparent;overflow:hidden;}
-                .scale-wrap{display:flex;justify-content:center;align-items:center;width:${sc}%;height:${sc}%;}
-                .gen-img{width:100%;height:100%;object-fit:contain;cursor:pointer;${gl}}
+                .gen-img{width:auto;height:auto;max-width:75%;max-height:75%;object-fit:contain;cursor:pointer;${gl}}
             </style>
-            <div class="scale-wrap"><img id="el" src="${currentImageSrc}" class="gen-img"/></div>
+            <img id="el" src="${currentImageSrc}" class="gen-img"/>
             <script>${script}<\/script>
         `;
         return `<iframe style="width:100%; height:100%; border:none; background:transparent;" allowtransparency="true" srcdoc="${html.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/'/g, "&#39;").replace(/</g, "&lt;").replace(/>/g, "&gt;")}"></iframe>`;

@@ -226,12 +226,16 @@
         }
 
         #preview-element {
+            /* Фишка: заставляем превьюшку растягиваться, даже если Base64 крошечный */
+            width: 1000px; /* Фиктивная ширина */
+            height: 1000px;
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
             transition: filter 0.3s, transform 0.3s;
             transform-origin: center;
-            image-rendering: -webkit-optimize-contrast; /* Улучшает резкость при растягивании */
+            /* Помогаем браузеру растягивать пиксели красивее */
+            image-rendering: -webkit-optimize-contrast; 
         }
     </style>
 </head>
@@ -264,13 +268,14 @@
         <div class="form-group" id="compression-container" style="display: none; border: 1px dashed var(--primary-color); padding: 10px; background: rgba(255,102,0,0.05);">
             <div class="range-header">
                 <label style="display: flex; align-items: center; gap: 8px;">
-                    Размер в пикселях (вес)
+                    Разрешение (вес)
                     <div id="status-light" class="status-light light-green"></div>
                 </label>
                 <span class="range-value" id="quality-val">300px</span>
             </div>
             <input type="range" id="img-quality" min="50" max="400" step="10" value="300">
             <div id="code-size-info" style="font-size: 11px; color: #aaa; text-align: right; margin-top: 4px;">Загрузите файл...</div>
+            <div style="font-size: 10px; color: #666; margin-top: -2px;">(Визуальный размер в Genially останется прежним)</div>
         </div>
 
         <div class="form-group">
@@ -417,7 +422,6 @@
         }
     });
 
-    // Обработка ползунка РАЗМЕРА ПИКСЕЛЕЙ
     imgQuality.addEventListener('input', (e) => {
         document.getElementById('quality-val').innerText = e.target.value + 'px';
         applyCompressionAndPreview();
@@ -436,7 +440,7 @@
                 imageUrl.style.display = 'none';
                 compressionContainer.style.display = 'flex';
                 
-                // Сбрасываем ползунок размера на оптимальные 300px при новой загрузке
+                // Ставим 300px при новой загрузке
                 imgQuality.value = 300;
                 document.getElementById('quality-val').innerText = '300px';
                 
@@ -447,7 +451,6 @@
         reader.readAsDataURL(file);
     }
 
-    // Жесткое уменьшение размера картинки
     function applyCompressionAndPreview() {
         if (!originalLoadedImage) return;
         
@@ -457,12 +460,10 @@
         let width = originalLoadedImage.width;
         let height = originalLoadedImage.height;
         
-        // Меняем размер пропорционально, если картинка больше ползунка
         if (width > targetWidth) {
             height *= targetWidth / width;
             width = targetWidth;
         } else {
-            // Если оригинальная картинка меньше ползунка, оставляем ее родной размер
             width = originalLoadedImage.width;
             height = originalLoadedImage.height;
         }
@@ -472,7 +473,7 @@
         const ctx = canvas.getContext('2d');
         ctx.drawImage(originalLoadedImage, 0, 0, width, height);
         
-        // Оставляем постоянное хорошее качество WebP, так как вес падает за счет уменьшения разрешения
+        // Постоянное хорошее качество WebP
         currentImageSrc = canvas.toDataURL('image/webp', 0.85);
         
         previewElement.src = currentImageSrc;
@@ -511,6 +512,7 @@
         previewElement.className = '';
         const animName = animationSelect.value;
         const trigger = triggerSelect.value;
+        // Визуальный масштаб
         previewElement.style.transform = `scale(${imgScale.value / 100})`;
         if (glowToggle.checked) {
             previewElement.style.filter = `drop-shadow(0 0 ${glowRadius.value}px ${glowColor.value})`;
@@ -552,15 +554,26 @@
         const glowFilter = glowToggle.checked ? `filter: drop-shadow(0 0 ${glowRadius.value}px ${glowColor.value});` : '';
         const timings = `--animate-duration: ${animDuration.value}s; --animate-delay: ${animDelay.value}s;`;
         
+        // ВАЖНО: Магия сидит здесь. Мы используем calc, чтобы 
+        // объединить "воздушную подушку" (75%) и Масштаб ползунка.
+        const visualBase = 0.75; // базовая "воздушная подушка"
+        const combinedScale = visualBase * scale;
+
         let innerHTML = `
             <style>
                 @import url('https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css');
                 body { margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; width: 100vw; height: 100vh; background: transparent; overflow: hidden; box-sizing: border-box; }
+                
+                .gen-img-wrap {
+                    display: flex; justify-content: center; align-items: center;
+                    width: calc(${combinedScale * 100}%); 
+                    height: calc(${combinedScale * 100}%);
+                }
+
                 .gen-img { 
-                    transform: scale(${scale}); 
-                    max-width: 75%; 
-                    max-height: 75%; 
-                    object-fit: contain; 
+                    /* НАСИЛЬНО растягиваем картинку на весь визуальный размер */
+                    width: 100%; height: 100%; 
+                    object-fit: contain; /* сохраняем пропорции */
                     cursor: pointer; 
                     ${glowFilter} 
                     ${timings} 
@@ -570,6 +583,7 @@
             innerHTML += ` body:hover .gen-img { animation: ${animName} ${animDuration.value}s ease ${animDelay.value}s forwards; }\n`;
         }
         innerHTML += `</style>\n`;
+        innerHTML += `<div class="gen-img-wrap">`;
         if (trigger === 'entrance') {
             innerHTML += `<img src="${currentImageSrc}" class="gen-img animate__animated animate__${animName}" />\n`;
         } else if (trigger === 'infinite') {
@@ -579,6 +593,8 @@
         } else if (trigger === 'click') {
             innerHTML += `<img src="${currentImageSrc}" class="gen-img" onclick="this.classList.remove('animate__animated', 'animate__${animName}'); void this.offsetWidth; this.classList.add('animate__animated', 'animate__${animName}');" />\n`;
         }
+        innerHTML += `</div>`;
+
         const escapedHTML = innerHTML.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/'/g, "&#39;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
         return `<iframe style="width: 100%; height: 100%; border: none; background: transparent;" allowtransparency="true" srcdoc="${escapedHTML}"></iframe>`;
     }
@@ -599,7 +615,7 @@
 
         if (codeLength > MAX_SAFE_LENGTH) {
             statusLight.className = 'status-light light-red';
-            codeSizeInfo.innerText = `Слишком тяжелая (${Math.round(codeLength/1024)} KB)! Уменьшите размер.`;
+            codeSizeInfo.innerText = `Слишком тяжелая (${Math.round(codeLength/1024)} KB)! Уменьшите разрешение.`;
             codeSizeInfo.style.color = '#ff4444';
         } else {
             statusLight.className = 'status-light light-green';

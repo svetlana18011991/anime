@@ -517,7 +517,7 @@
         } else { inf(); }
     }
 
-    // --- ГЕНЕРАЦИЯ КОДА И ЖЕЛЕЗОБЕТОННОЕ КОПИРОВАНИЕ ---
+    // --- ГЕНЕРАЦИЯ КОДА ---
     function getCfg() {
         return {
             eOn: document.getElementById('chk-ent').checked, eEff: document.getElementById('sel-ent').value, eDur: document.getElementById('dur-ent').value + 's', eDel: document.getElementById('del-ent').value + 's',
@@ -546,13 +546,14 @@
             if(${c.eOn}){ st='ent'; p('${c.eEff}','${c.eDur}','${c.eDel}',false,inf); } else { inf(); }
         `;
 
+        // Исправленная переменная currentSrc
         const html = `
             <style>
                 @import url('https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css');
                 body{margin:0;padding:0;display:flex;justify-content:center;align-items:center;width:100vw;height:100vh;background:transparent;overflow:hidden;}
                 .gen-img{width:auto;height:auto;max-width:75%;max-height:75%;object-fit:contain;cursor:pointer;${gl}}
             </style>
-            <img id="el" src="${currentImageSrc}" class="gen-img"/>
+            <img id="el" src="${currentSrc}" class="gen-img"/>
             <script>${script}<\/script>
         `;
         return `<iframe style="width:100%; height:100%; border:none; background:transparent;" allowtransparency="true" srcdoc="${html.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/'/g, "&#39;").replace(/</g, "&lt;").replace(/>/g, "&gt;")}"></iframe>`;
@@ -564,19 +565,33 @@
         if (document.querySelector('input[name="img-source"]:checked').value === 'url') {
             l.className = 'status-light light-green'; i.innerText = ''; return;
         }
-        const len = genCode().length;
-        if (len > 12000) {
-            l.className = 'status-light light-red'; i.innerText = `(${Math.round(len/1024)}KB) Уменьшите сжатие!`; i.style.color = '#ff4444';
-        } else {
-            l.className = 'status-light light-green'; i.innerText = `(${Math.round(len/1024)}KB) OK!`; i.style.color = '#00ff00';
+        
+        try {
+            const len = genCode().length;
+            if (len > 12000) {
+                l.className = 'status-light light-red'; i.innerText = `(${Math.round(len/1024)}KB) Уменьшите сжатие!`; i.style.color = '#ff4444';
+            } else {
+                l.className = 'status-light light-green'; i.innerText = `(${Math.round(len/1024)}KB) OK!`; i.style.color = '#00ff00';
+            }
+        } catch (e) {
+            console.error(e);
         }
     }
 
+    // --- ЖЕЛЕЗОБЕТОННОЕ КОПИРОВАНИЕ ---
     document.getElementById('copy-btn').addEventListener('click', async () => {
         if (!currentSrc) { alert("Сначала добавьте картинку!"); return; }
         
         const btn = document.getElementById('copy-btn');
-        const codeToCopy = genCode();
+        let codeToCopy = '';
+        
+        try {
+            codeToCopy = genCode();
+        } catch (e) {
+            alert("Ошибка при генерации кода. Обновите страницу.");
+            console.error(e);
+            return;
+        }
 
         const successCopy = () => {
             btn.innerText = "✓ КОД В БУФЕРЕ"; 
@@ -590,9 +605,11 @@
         };
 
         try {
+            // Современный метод
             await navigator.clipboard.writeText(codeToCopy);
             successCopy();
         } catch (err) {
+            // Если браузер блокирует - старый надежный метод
             try {
                 const textArea = document.createElement("textarea");
                 textArea.value = codeToCopy;
@@ -602,7 +619,8 @@
                 document.body.removeChild(textArea);
                 successCopy();
             } catch (err2) {
-                alert("Ошибка копирования. Скопируйте вручную!");
+                alert("Ошибка! Ваш браузер блокирует автоматическое копирование.");
+                console.error(err2);
             }
         }
     });

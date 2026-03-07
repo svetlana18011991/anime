@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neon Genially Animator | Светлана Быкова</title>
+    <title>Neon Genially Animator | Студия интерактивов</title>
     <style>
         @import url('https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css');
         
@@ -12,237 +12,118 @@
             --primary-hover: #ff8533;
             --bg-color: #121212;
             --panel-bg: #1e1e1e;
+            --panel-border: #333;
             --text-color: #e0e0e0;
-            --neon-glow: 0 0 15px rgba(255, 102, 0, 0.4);
-            --neon-border: 1px solid var(--primary-color);
+            --neon-glow: 0 0 10px rgba(255, 102, 0, 0.3);
         }
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            overflow: hidden;
+            margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden;
         }
 
-        /* --- Брендинг --- */
+        /* Хедер */
         .main-header {
-            display: flex;
-            align-items: center;
-            padding: 10px 20px;
-            background: rgba(30, 30, 30, 0.7);
-            border-bottom: var(--neon-border);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-            z-index: 100;
+            display: flex; align-items: center; padding: 10px 20px;
+            background: rgba(30, 30, 30, 0.9); border-bottom: 1px solid var(--primary-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5); z-index: 100;
         }
-
-        .logo-link {
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        .logo-img {
-            width: 50px;
-            height: 50px;
-            object-fit: contain;
-            margin-right: 15px;
-            transition: transform 0.3s;
-        }
-
+        .logo-link { display: flex; align-items: center; text-decoration: none; cursor: pointer; }
+        .logo-img { width: 45px; height: 45px; object-fit: contain; margin-right: 15px; }
         @keyframes softPulse {
-            0% { transform: scale(1); opacity: 0.8; filter: drop-shadow(0 0 2px var(--primary-color)); }
-            50% { transform: scale(1.05); opacity: 1; filter: drop-shadow(0 0 10px var(--primary-color)); }
-            100% { transform: scale(1); opacity: 0.8; filter: drop-shadow(0 0 2px var(--primary-color)); }
+            0% { transform: scale(1); filter: drop-shadow(0 0 2px var(--primary-color)); }
+            50% { transform: scale(1.05); filter: drop-shadow(0 0 8px var(--primary-color)); }
+            100% { transform: scale(1); filter: drop-shadow(0 0 2px var(--primary-color)); }
         }
-
-        .pulsate { animation: softPulse 2s infinite ease-in-out; }
-        .logo-link:hover .logo-img { transform: scale(1.1) rotate(5deg); }
-
+        .pulsate { animation: softPulse 2.5s infinite ease-in-out; }
         .header-text { display: flex; flex-direction: column; }
-        .author-name { font-weight: bold; font-size: 16px; color: var(--primary-color); text-shadow: 0 0 8px rgba(255, 102, 0, 0.5); }
-        .project-title { font-size: 14px; color: #aaa; margin-top: -2px; }
+        .author-name { font-weight: bold; font-size: 16px; color: var(--primary-color); }
+        .project-title { font-size: 13px; color: #aaa; }
 
-        ::-webkit-scrollbar { width: 8px; }
+        /* Скроллбары */
+        ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: var(--bg-color); }
-        ::-webkit-scrollbar-thumb { background: var(--primary-color); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: var(--primary-color); border-radius: 3px; }
 
         .container {
-            display: flex;
-            flex: 1;
-            width: 100%;
-            padding: 10px 20px 20px 20px;
-            gap: 20px;
-            box-sizing: border-box;
-            overflow: hidden;
+            display: flex; flex: 1; padding: 15px; gap: 15px; overflow: hidden;
         }
 
+        /* Левая панель настроек */
         .settings {
-            flex: 1;
-            background: var(--panel-bg);
-            padding: 20px;
-            border-radius: 12px;
-            border: var(--neon-border);
-            box-shadow: var(--neon-glow);
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            max-width: 420px;
-            overflow-y: auto;
+            flex: 1; background: var(--panel-bg); padding: 15px 20px;
+            border-radius: 10px; border: 1px solid var(--panel-border);
+            display: flex; flex-direction: column; gap: 12px;
+            max-width: 420px; overflow-y: auto;
         }
+        .settings h2 { margin: 0 0 5px 0; font-size: 18px; color: var(--primary-color); text-align: center; text-transform: uppercase; letter-spacing: 1px;}
 
-        .settings h2 { 
-            margin-top: 0; 
-            margin-bottom: 5px;
-            font-size: 20px; 
-            color: var(--primary-color);
-            text-shadow: 0 0 8px rgba(255, 102, 0, 0.5);
-            text-align: center;
-        }
-
-        .form-group { 
-            display: flex; 
-            flex-direction: column; 
-            gap: 4px; 
-            background: rgba(255,255,255,0.02);
-            padding: 8px;
-            border-radius: 8px;
-        }
-
-        label { font-weight: bold; font-size: 12px; color: #aaa; }
-        
+        /* Общие стили форм */
+        .form-group { display: flex; flex-direction: column; gap: 5px; }
+        label { font-weight: bold; font-size: 12px; color: #bbb; }
         input[type="file"], input[type="text"], select, input[type="color"] {
-            padding: 7px;
-            background: #2a2a2a;
-            color: white;
-            border: 1px solid #444;
-            border-radius: 6px;
-            width: 100%;
-            box-sizing: border-box;
-            transition: border 0.3s;
-            font-size: 13px;
+            padding: 6px 10px; background: #2a2a2a; color: white; border: 1px solid #444;
+            border-radius: 6px; width: 100%; box-sizing: border-box; font-size: 13px;
         }
-        
-        input[type="text"]:focus, select:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 5px rgba(255, 102, 0, 0.3);
+        input[type="text"]:focus, select:focus { outline: none; border-color: var(--primary-color); }
+        input[type="range"] { accent-color: var(--primary-color); width: 100%; margin: 2px 0;}
+        .range-header { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #999;}
+        .range-value { color: var(--primary-color); font-weight: bold; font-size: 12px;}
+        .radio-group { display: flex; gap: 15px; }
+        .radio-group label { display: flex; align-items: center; gap: 5px; color: #ddd; cursor: pointer;}
+
+        /* БЛОКИ ТАЙМЛАЙНА (Шаги) */
+        .timeline-step {
+            border: 1px solid #444; border-radius: 8px; padding: 10px;
+            background: rgba(0,0,0,0.2); transition: border-color 0.3s;
         }
+        .timeline-step.active { border-color: var(--primary-color); box-shadow: inset 0 0 10px rgba(255,102,0,0.05); }
+        .step-header { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+        .step-header input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--primary-color); cursor: pointer; }
+        .step-header label { font-size: 14px; color: #fff; cursor: pointer; font-weight: normal;}
+        .step-body { display: none; margin-top: 10px; flex-direction: column; gap: 8px; border-top: 1px dashed #444; padding-top: 10px;}
 
-        input[type="range"] { accent-color: var(--primary-color); width: 100%; margin: 0;}
-        .range-header { display: flex; justify-content: space-between; align-items: center; font-size: 12px;}
-        .range-value { color: var(--primary-color); font-weight: bold; }
+        /* Светофор размера */
+        .status-light { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+        .light-green { background: #00ff00; box-shadow: 0 0 8px #00ff00; }
+        .light-red { background: #ff0000; box-shadow: 0 0 8px #ff0000; }
 
-        .radio-group { display: flex; gap: 15px; margin-bottom: 2px; }
-        .radio-group label { color: var(--text-color); cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 13px;}
-        input[type="radio"] { accent-color: var(--primary-color); margin: 0;}
-
-        .checkbox-group { display: flex; align-items: center; gap: 10px; margin-top: 5px;}
-        input[type="checkbox"] { accent-color: var(--primary-color); width: 15px; height: 15px; margin: 0;}
-
-        .status-light {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            display: inline-block;
-            transition: all 0.3s ease;
-        }
-        .light-green { background-color: #00ff00; box-shadow: 0 0 10px #00ff00; }
-        .light-red { background-color: #ff0000; box-shadow: 0 0 12px #ff0000, 0 0 5px #ff0000 inset; }
-
-        .button-group { display: flex; gap: 10px; margin-top: auto; padding-top: 10px;}
-        
+        /* Кнопки */
+        .btn-group { display: flex; gap: 10px; margin-top: auto; padding-top: 10px; }
         button {
-            flex: 1;
-            background-color: transparent;
-            color: var(--primary-color);
-            border: 2px solid var(--primary-color);
-            padding: 10px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 13px;
-            transition: all 0.3s;
-            text-transform: uppercase;
+            flex: 1; background: transparent; color: var(--primary-color);
+            border: 1px solid var(--primary-color); padding: 10px; border-radius: 6px;
+            cursor: pointer; font-weight: bold; font-size: 12px; text-transform: uppercase; transition: 0.3s;
         }
-        button:hover { 
-            background-color: var(--primary-color); 
-            color: #fff;
-            box-shadow: var(--neon-glow);
-        }
-        
-        button.primary-btn { background-color: var(--primary-color); color: #fff; }
-        button.primary-btn:hover { background-color: var(--primary-hover); }
+        button:hover { background: var(--primary-color); color: #fff; box-shadow: var(--neon-glow); }
+        .btn-primary { background: var(--primary-color); color: #fff; }
 
+        /* Превью */
         .preview-area {
-            flex: 2;
-            background: #181818;
-            border-radius: 12px;
-            border: var(--neon-border);
-            box-shadow: var(--neon-glow);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            background-image: radial-gradient(#333 1px, transparent 1px);
-            background-size: 20px 20px;
-            transition: background-color 0.3s;
-            overflow: hidden;
+            flex: 2; background: #1a1a1a; border-radius: 10px; border: 1px solid var(--panel-border);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            position: relative; background-image: radial-gradient(#333 1px, transparent 1px); background-size: 20px 20px;
         }
+        .preview-controls {
+            position: absolute; top: 15px; left: 15px; display: flex; gap: 10px; z-index: 10;
+        }
+        .play-btn {
+            background: rgba(30,30,30,0.9); color: #fff; border: 1px solid var(--primary-color);
+            padding: 6px 15px; border-radius: 20px; font-size: 12px; cursor: pointer;
+            display: flex; align-items: center; gap: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+        .play-btn:hover { background: var(--primary-color); }
         
-        .preview-area.dragover { background-color: rgba(255, 102, 0, 0.1); border: 2px dashed var(--primary-color); }
-
-        .preview-header {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            background: rgba(30, 30, 30, 0.9);
-            color: var(--primary-color);
-            padding: 4px 10px;
-            border-radius: 5px;
-            font-weight: bold;
-            font-size: 12px;
-            border: 1px solid var(--primary-color);
-            box-shadow: 0 0 10px rgba(255, 102, 0, 0.2);
-            z-index: 10;
-        }
-
-        .drag-text { position: absolute; bottom: 15px; color: #555; font-size: 12px; z-index: 10;}
-
-        #preview-wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            padding: 50px; 
-            box-sizing: border-box;
-        }
-
-        #preview-element {
-            /* Фишка: заставляем превьюшку растягиваться, даже если Base64 крошечный */
-            width: 1000px; /* Фиктивная ширина */
-            height: 1000px;
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            transition: filter 0.3s, transform 0.3s;
-            transform-origin: center;
-            /* Помогаем браузеру растягивать пиксели красивее */
-            image-rendering: -webkit-optimize-contrast; 
-        }
+        #preview-wrapper { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; padding: 40px; box-sizing: border-box; }
+        #preview-element { max-width: 100%; max-height: 100%; object-fit: contain; transform-origin: center; cursor: pointer;}
     </style>
 </head>
 <body>
 
 <header class="main-header">
-    <a href="https://t.me/interactiv_matematika" target="_blank" class="logo-link" title="Перейти на Telegram-канал">
+    <a href="https://t.me/interactiv_matematika" target="_blank" class="logo-link">
         <img src="logo.png" alt="Логотип" class="logo-img pulsate">
     </a>
     <div class="header-text">
@@ -253,163 +134,184 @@
 
 <div class="container">
     <div class="settings">
-        <h2>Редактор анимаций</h2>
+        <h2>Настройки</h2>
         
-        <div class="form-group">
-            <label>1. Источник изображения</label>
-            <div class="radio-group">
-                <label><input type="radio" name="img-source" value="file" checked> Файл</label>
-                <label><input type="radio" name="img-source" value="url"> Ссылка (URL)</label>
+        <div style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 8px;">
+            <div class="form-group" style="margin-bottom: 8px;">
+                <div class="radio-group">
+                    <label><input type="radio" name="img-source" value="file" checked> Файл</label>
+                    <label><input type="radio" name="img-source" value="url"> Ссылка (URL)</label>
+                </div>
+                <input type="file" id="image-upload" accept="image/*" style="margin-top:5px;">
+                <input type="text" id="image-url" placeholder="Вставьте ссылку" style="display: none; margin-top:5px;">
             </div>
-            <input type="file" id="image-upload" accept="image/*">
-            <input type="text" id="image-url" placeholder="Вставьте прямую ссылку на картинку" style="display: none;">
-        </div>
 
-        <div class="form-group" id="compression-container" style="display: none; border: 1px dashed var(--primary-color); padding: 10px; background: rgba(255,102,0,0.05);">
-            <div class="range-header">
-                <label style="display: flex; align-items: center; gap: 8px;">
-                    Разрешение (вес)
-                    <div id="status-light" class="status-light light-green"></div>
-                </label>
-                <span class="range-value" id="quality-val">300px</span>
+            <div class="form-group" id="compression-container">
+                <div class="range-header">
+                    <span>Разрешение (Вес) <div id="status-light" class="status-light light-green"></div></span>
+                    <span class="range-value" id="quality-val">300px</span>
+                </div>
+                <input type="range" id="img-quality" min="50" max="400" step="10" value="300">
+                <div id="code-size-info" style="font-size: 10px; color: #888; text-align: right;">Ожидание...</div>
             </div>
-            <input type="range" id="img-quality" min="50" max="400" step="10" value="300">
-            <div id="code-size-info" style="font-size: 11px; color: #aaa; text-align: right; margin-top: 4px;">Загрузите файл...</div>
-            <div style="font-size: 10px; color: #666; margin-top: -2px;">(Визуальный размер в Genially останется прежним)</div>
-        </div>
 
-        <div class="form-group">
-            <label>2. Триггер анимации</label>
-            <select id="trigger-select">
-                <option value="entrance">При появлении</option>
-                <option value="hover">При наведении мыши</option>
-                <option value="click">При клике</option>
-                <option value="infinite">Постоянно (зациклено)</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label>3. Эффект анимации</label>
-            <select id="animation-select">
-                <option value="bounce">Bounce (Прыжок)</option>
-                <option value="pulse">Pulse (Пульсация)</option>
-                <option value="rubberBand">RubberBand (Резинка)</option>
-                <option value="shakeX">Shake (Тряска)</option>
-                <option value="tada">Tada (Та-дам!)</option>
-                <option value="wobble">Wobble (Качение)</option>
-                <option value="heartBeat">HeartBeat (Сердцебиение)</option>
-                <option value="fadeIn">Fade In (Плавное появление)</option>
-                <option value="zoomIn">Zoom In (Увеличение)</option>
-                <option value="slideInUp">Slide Up (Выезд снизу)</option>
-                <option value="flip">Flip (Переворот)</option>
-                <option value="rotateIn">Rotate In (Вращение)</option>
-                <option value="lightSpeedInRight">Light Speed (Быстрый выезд)</option>
-                <option value="hinge">Hinge (Отрыв и падение)</option>
-                <option value="zoomOut">Zoom Out (Исчезновение)</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <div class="range-header">
-                <label>Длительность (сек):</label>
-                <span class="range-value" id="duration-val">1s</span>
+            <div class="form-group" style="margin-top: 5px;">
+                <div class="range-header">
+                    <span>Визуальный масштаб на слайде:</span>
+                    <span class="range-value" id="scale-val">100%</span>
+                </div>
+                <input type="range" id="img-scale" min="20" max="150" step="5" value="100">
             </div>
-            <input type="range" id="anim-duration" min="0.1" max="5" step="0.1" value="1">
-            
-            <div class="range-header" style="margin-top: 5px;">
-                <label>Задержка старта (сек):</label>
-                <span class="range-value" id="delay-val">0s</span>
-            </div>
-            <input type="range" id="anim-delay" min="0" max="5" step="0.1" value="0">
         </div>
 
-        <div class="form-group">
-            <div class="range-header">
-                <label>Масштаб картинки (%):</label>
-                <span class="range-value" id="scale-val">100%</span>
+        <div style="font-size: 12px; color: var(--primary-color); font-weight: bold; margin-top: 5px;">Цепочка анимаций:</div>
+
+        <div class="timeline-step active" id="step1-container">
+            <div class="step-header">
+                <input type="checkbox" id="step1-enable" checked>
+                <label for="step1-enable">1. При появлении (Вход)</label>
             </div>
-            <input type="range" id="img-scale" min="10" max="150" step="5" value="100">
+            <div class="step-body" style="display: flex;">
+                <select id="step1-effect">
+                    <option value="bounceIn">Bounce In (Упругий вылет)</option>
+                    <option value="fadeIn">Fade In (Плавное проявление)</option>
+                    <option value="zoomIn">Zoom In (Увеличение)</option>
+                    <option value="slideInUp">Slide Up (Вылет снизу)</option>
+                    <option value="lightSpeedInRight">Light Speed (Быстрый вылет)</option>
+                </select>
+                <div class="range-header">Длительность: <span class="range-value" id="step1-dur-val">1.0s</span></div>
+                <input type="range" id="step1-dur" min="0.2" max="3" step="0.1" value="1">
+                <div class="range-header">Задержка: <span class="range-value" id="step1-del-val">0.0s</span></div>
+                <input type="range" id="step1-del" min="0" max="3" step="0.1" value="0">
+            </div>
         </div>
 
-        <div class="form-group">
-            <div class="checkbox-group">
+        <div class="timeline-step" id="step2-container">
+            <div class="step-header">
+                <input type="checkbox" id="step2-enable">
+                <label for="step2-enable">2. Фоновый режим (Ожидание)</label>
+            </div>
+            <div class="step-body">
+                <div style="font-size:10px; color:#888;">*Начнется после окончания шага 1</div>
+                <select id="step2-effect">
+                    <option value="pulse">Pulse (Мягкая пульсация)</option>
+                    <option value="heartBeat">HeartBeat (Сердцебиение)</option>
+                    <option value="wobble">Wobble (Качение)</option>
+                    <option value="shakeX">Shake (Тряска)</option>
+                    <option value="tada">Tada (Та-дам!)</option>
+                </select>
+                <div class="range-header">Скорость одного цикла: <span class="range-value" id="step2-dur-val">2.0s</span></div>
+                <input type="range" id="step2-dur" min="0.5" max="5" step="0.5" value="2">
+            </div>
+        </div>
+
+        <div class="timeline-step" id="step3-container">
+            <div class="step-header">
+                <input type="checkbox" id="step3-enable">
+                <label for="step3-enable">3. Действие (Клик / Наведение)</label>
+            </div>
+            <div class="step-body">
+                <select id="step3-trigger">
+                    <option value="click">По клику мышью</option>
+                    <option value="hover">При наведении мыши</option>
+                </select>
+                <select id="step3-effect">
+                    <option value="rubberBand">RubberBand (Резинка)</option>
+                    <option value="jello">Jello (Желе)</option>
+                    <option value="bounce">Bounce (Подпрыгивание)</option>
+                    <option value="flip">Flip (Переворот)</option>
+                    <option value="fadeOut">Fade Out (Исчезновение)</option>
+                    <option value="zoomOut">Zoom Out (Удаление)</option>
+                </select>
+                <div class="range-header">Длительность: <span class="range-value" id="step3-dur-val">1.0s</span></div>
+                <input type="range" id="step3-dur" min="0.2" max="3" step="0.1" value="1">
+            </div>
+        </div>
+
+        <div style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
                 <input type="checkbox" id="glow-toggle">
-                <label for="glow-toggle">Добавить свечение</label>
+                <label for="glow-toggle" style="color:#fff;">Свечение (Тень)</label>
             </div>
-            
-            <div id="glow-settings" style="display: none; margin-top: 5px;">
-                <div style="display: flex; gap: 8px;">
-                    <div style="flex: 1;">
-                        <label>Цвет</label>
-                        <input type="color" id="glow-color" value="#ff6600">
-                    </div>
-                    <div style="flex: 2;">
-                        <div class="range-header">
-                            <label>Радиус (px)</label>
-                            <span class="range-value" id="glow-radius-val">15</span>
-                        </div>
-                        <input type="range" id="glow-radius" min="1" max="50" value="15">
-                    </div>
+            <div id="glow-settings" style="display: none; margin-top: 8px; flex-direction: row; gap: 10px;">
+                <input type="color" id="glow-color" value="#ff6600" style="flex:1; padding:2px;">
+                <div style="flex:2;">
+                    <div class="range-header">Радиус: <span id="glow-radius-val">15</span></div>
+                    <input type="range" id="glow-radius" min="1" max="50" value="15">
                 </div>
             </div>
         </div>
 
-        <div class="button-group">
-            <button id="reset-btn">Сбросить</button>
-            <button id="copy-btn" class="primary-btn">СКОПИРОВАТЬ КОД</button>
+        <div class="btn-group">
+            <button id="copy-btn" class="btn-primary">КОПИРОВАТЬ КОД</button>
         </div>
     </div>
 
     <div class="preview-area" id="drop-zone">
-        <div class="preview-header">Превью</div>
+        <div class="preview-controls">
+            <button id="play-preview-btn" class="play-btn">▶ ВОСПРОИЗВЕСТИ СНАЧАЛА</button>
+        </div>
         <div id="preview-wrapper">
             <img id="preview-element" src="https://via.placeholder.com/200x150/2a2a2a/ff6600?text=Загрузите+картинку" alt="Preview">
         </div>
-        <div class="drag-text">Или перетащите файл сюда</div>
     </div>
 </div>
 
 <script>
+    // Логика интерфейса (Скрытие/Раскрытие шагов)
+    function setupTimelineStep(enableId, bodyId, containerId) {
+        const checkbox = document.getElementById(enableId);
+        const body = document.getElementById(bodyId);
+        const container = document.getElementById(containerId);
+        
+        checkbox.addEventListener('change', () => {
+            body.style.display = checkbox.checked ? 'flex' : 'none';
+            container.className = checkbox.checked ? 'timeline-step active' : 'timeline-step';
+            updatePreviewLogic(); // Перезапускаем превью при смене настроек
+        });
+    }
+    setupTimelineStep('step1-enable', 'step1-container .step-body', 'step1-container');
+    setupTimelineStep('step2-enable', 'step2-container .step-body', 'step2-container');
+    setupTimelineStep('step3-enable', 'step3-container .step-body', 'step3-container');
+
+    // Обновление цифр ползунков
+    const ranges = [
+        {id: 'img-scale', valId: 'scale-val', suffix: '%'},
+        {id: 'img-quality', valId: 'quality-val', suffix: 'px'},
+        {id: 'step1-dur', valId: 'step1-dur-val', suffix: 's'},
+        {id: 'step1-del', valId: 'step1-del-val', suffix: 's'},
+        {id: 'step2-dur', valId: 'step2-dur-val', suffix: 's'},
+        {id: 'step3-dur', valId: 'step3-dur-val', suffix: 's'},
+        {id: 'glow-radius', valId: 'glow-radius-val', suffix: ''}
+    ];
+    ranges.forEach(r => {
+        const el = document.getElementById(r.id);
+        el.addEventListener('input', (e) => {
+            document.getElementById(r.valId).innerText = e.target.value + r.suffix;
+            if(r.id === 'img-quality' || r.id === 'img-scale') applyCompression();
+        });
+    });
+
+    // Обработка загрузки картинки (Файл / Ссылка)
     const sourceRadios = document.querySelectorAll('input[name="img-source"]');
     const imageUpload = document.getElementById('image-upload');
     const imageUrl = document.getElementById('image-url');
-    const previewElement = document.getElementById('preview-element');
-    const dropZone = document.getElementById('drop-zone');
     const compressionContainer = document.getElementById('compression-container');
-    const imgQuality = document.getElementById('img-quality');
-    const statusLight = document.getElementById('status-light');
-    const codeSizeInfo = document.getElementById('code-size-info');
+    const previewElement = document.getElementById('preview-element');
     
-    const triggerSelect = document.getElementById('trigger-select');
-    const animationSelect = document.getElementById('animation-select');
-    const animDuration = document.getElementById('anim-duration');
-    const animDelay = document.getElementById('anim-delay');
-    const imgScale = document.getElementById('img-scale');
-    
-    const glowToggle = document.getElementById('glow-toggle');
-    const glowSettings = document.getElementById('glow-settings');
-    const glowColor = document.getElementById('glow-color');
-    const glowRadius = document.getElementById('glow-radius');
-    
-    const copyBtn = document.getElementById('copy-btn');
-    const resetBtn = document.getElementById('reset-btn');
-
     let currentImageSrc = '';
-    let originalLoadedImage = null; 
+    let originalLoadedImage = null;
 
     sourceRadios.forEach(radio => {
         radio.addEventListener('change', (e) => {
             if (e.target.value === 'file') {
-                imageUpload.style.display = 'block';
-                imageUrl.style.display = 'none';
-                if(originalLoadedImage) compressionContainer.style.display = 'flex';
-                checkCodeSize();
+                imageUpload.style.display = 'block'; imageUrl.style.display = 'none';
+                compressionContainer.style.display = originalLoadedImage ? 'flex' : 'none';
             } else {
-                imageUpload.style.display = 'none';
-                imageUrl.style.display = 'block';
+                imageUpload.style.display = 'none'; imageUrl.style.display = 'block';
                 compressionContainer.style.display = 'none';
-                checkCodeSize();
             }
+            checkCodeSize();
         });
     });
 
@@ -417,14 +319,8 @@
         if (e.target.value) {
             currentImageSrc = e.target.value;
             previewElement.src = currentImageSrc;
-            updatePreview();
-            checkCodeSize();
+            playPreviewSequence(); checkCodeSize();
         }
-    });
-
-    imgQuality.addEventListener('input', (e) => {
-        document.getElementById('quality-val').innerText = e.target.value + 'px';
-        applyCompressionAndPreview();
     });
 
     function handleFile(file) {
@@ -434,224 +330,222 @@
             const img = new Image();
             img.onload = function() {
                 originalLoadedImage = img;
-                
                 document.querySelector('input[value="file"]').checked = true;
-                imageUpload.style.display = 'block';
-                imageUrl.style.display = 'none';
+                imageUpload.style.display = 'block'; imageUrl.style.display = 'none';
                 compressionContainer.style.display = 'flex';
-                
-                // Ставим 300px при новой загрузке
-                imgQuality.value = 300;
+                document.getElementById('img-quality').value = 300;
                 document.getElementById('quality-val').innerText = '300px';
-                
-                applyCompressionAndPreview();
+                applyCompression();
             }
             img.src = event.target.result;
         }
         reader.readAsDataURL(file);
     }
-
-    function applyCompressionAndPreview() {
-        if (!originalLoadedImage) return;
-        
-        const canvas = document.createElement('canvas');
-        const targetWidth = parseInt(imgQuality.value); 
-        
-        let width = originalLoadedImage.width;
-        let height = originalLoadedImage.height;
-        
-        if (width > targetWidth) {
-            height *= targetWidth / width;
-            width = targetWidth;
-        } else {
-            width = originalLoadedImage.width;
-            height = originalLoadedImage.height;
-        }
-        
-        canvas.width = width; 
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(originalLoadedImage, 0, 0, width, height);
-        
-        // Постоянное хорошее качество WebP
-        currentImageSrc = canvas.toDataURL('image/webp', 0.85);
-        
-        previewElement.src = currentImageSrc;
-        updatePreview();
-        checkCodeSize();
-    }
-
     imageUpload.addEventListener('change', (e) => handleFile(e.target.files[0]));
 
-    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
-    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
-    dropZone.addEventListener('drop', (e) => {
-        e.preventDefault();
-        dropZone.classList.remove('dragover');
-        if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
-    });
-
-    function updateLabels() {
-        document.getElementById('duration-val').innerText = animDuration.value + 's';
-        document.getElementById('delay-val').innerText = animDelay.value + 's';
-        document.getElementById('scale-val').innerText = imgScale.value + '%';
-        document.getElementById('glow-radius-val').innerText = glowRadius.value;
+    function applyCompression() {
+        if (!originalLoadedImage) return;
+        const canvas = document.createElement('canvas');
+        const targetWidth = parseInt(document.getElementById('img-quality').value); 
+        let width = originalLoadedImage.width; let height = originalLoadedImage.height;
+        if (width > targetWidth) { height *= targetWidth / width; width = targetWidth; }
+        
+        canvas.width = width; canvas.height = height;
+        canvas.getContext('2d').drawImage(originalLoadedImage, 0, 0, width, height);
+        currentImageSrc = canvas.toDataURL('image/webp', 0.85);
+        previewElement.src = currentImageSrc;
+        
+        // Визуальный масштаб
+        const scale = document.getElementById('img-scale').value / 100;
+        previewElement.style.transform = `scale(${scale})`;
+        
+        playPreviewSequence();
+        checkCodeSize();
     }
 
-    const inputs = [triggerSelect, animationSelect, animDuration, animDelay, imgScale, glowColor, glowRadius];
-    inputs.forEach(input => input.addEventListener('input', () => { updateLabels(); updatePreview(); checkCodeSize(); }));
-    
-    glowToggle.addEventListener('change', function() {
-        glowSettings.style.display = this.checked ? 'block' : 'none';
-        updatePreview();
-        checkCodeSize();
+    // Включение/выключение свечения
+    document.getElementById('glow-toggle').addEventListener('change', function() {
+        document.getElementById('glow-settings').style.display = this.checked ? 'flex' : 'none';
+        playPreviewSequence(); checkCodeSize();
     });
 
-    function updatePreview() {
-        if (!currentImageSrc) return;
-        previewElement.className = '';
-        const animName = animationSelect.value;
-        const trigger = triggerSelect.value;
-        // Визуальный масштаб
-        previewElement.style.transform = `scale(${imgScale.value / 100})`;
-        if (glowToggle.checked) {
-            previewElement.style.filter = `drop-shadow(0 0 ${glowRadius.value}px ${glowColor.value})`;
+    // Слушатели изменения любых настроек анимации
+    const animInputs = document.querySelectorAll('#step1-effect, #step2-effect, #step3-effect, #step3-trigger, #glow-color, input[type="range"]');
+    animInputs.forEach(input => input.addEventListener('change', updatePreviewLogic));
+
+    function updatePreviewLogic() {
+        // Меняем масштаб и тень без перезапуска всей анимации, если можно
+        const scale = document.getElementById('img-scale').value / 100;
+        previewElement.style.transform = `scale(${scale})`;
+        if (document.getElementById('glow-toggle').checked) {
+            const r = document.getElementById('glow-radius').value;
+            const c = document.getElementById('glow-color').value;
+            previewElement.style.filter = `drop-shadow(0 0 ${r}px ${c})`;
         } else {
             previewElement.style.filter = 'none';
         }
-        previewElement.style.animationDuration = `${animDuration.value}s`;
-        previewElement.style.animationDelay = `${animDelay.value}s`;
+        checkCodeSize();
+    }
+
+    // --- СЕРДЦЕ РЕДАКТОРА: ЛОГИКА ТАЙМЛАЙНА ДЛЯ ПРЕВЬЮ ---
+    document.getElementById('play-preview-btn').addEventListener('click', playPreviewSequence);
+
+    function playPreviewSequence() {
+        if (!currentImageSrc) return;
         
-        if (trigger === 'entrance') {
-            previewElement.classList.add('animate__animated', `animate__${animName}`);
-        } else if (trigger === 'infinite') {
-            previewElement.classList.add('animate__animated', `animate__${animName}`, 'animate__infinite');
-        } else if (trigger === 'hover') {
-            previewElement.onmouseenter = () => {
-                previewElement.classList.remove('animate__animated', `animate__${animName}`);
-                void previewElement.offsetWidth;
-                previewElement.classList.add('animate__animated', `animate__${animName}`);
-            };
-            previewElement.onmouseleave = null;
-        } else if (trigger === 'click') {
-            previewElement.onclick = () => {
-                previewElement.classList.remove('animate__animated', `animate__${animName}`);
-                void previewElement.offsetWidth;
-                previewElement.classList.add('animate__animated', `animate__${animName}`);
-            };
+        // Очищаем старые классы и события
+        previewElement.className = '';
+        previewElement.style.animationDuration = '';
+        previewElement.style.animationDelay = '';
+        previewElement.onmouseenter = null;
+        previewElement.onmouseleave = null;
+        previewElement.onclick = null;
+        // Хак для принудительного сброса анимации
+        void previewElement.offsetWidth; 
+
+        // Читаем конфиг
+        const s1 = document.getElementById('step1-enable').checked;
+        const s2 = document.getElementById('step2-enable').checked;
+        const s3 = document.getElementById('step3-enable').checked;
+
+        function startInfinite() {
+            if(!s2) return;
+            previewElement.className = `animate__animated animate__${document.getElementById('step2-effect').value} animate__infinite`;
+            previewElement.style.animationDuration = document.getElementById('step2-dur').value + 's';
+            previewElement.style.animationDelay = '0s';
         }
-        if (trigger === 'entrance' || trigger === 'infinite') {
-            previewElement.classList.remove('animate__animated', `animate__${animName}`);
-            void previewElement.offsetWidth;
-            previewElement.classList.add('animate__animated', `animate__${animName}`);
+
+        function playAction() {
+            if(!s3) return;
+            const actClass = document.getElementById('step3-effect').value;
+            previewElement.className = `animate__animated animate__${actClass}`;
+            previewElement.style.animationDuration = document.getElementById('step3-dur').value + 's';
+            previewElement.style.animationDelay = '0s';
+            
+            // Если анимация - исчезновение, не возвращаем пульсацию
+            if(!actClass.toLowerCase().includes('out')) {
+                previewElement.addEventListener('animationend', function handler() {
+                    previewElement.removeEventListener('animationend', handler);
+                    startInfinite();
+                }, {once:true});
+            }
+        }
+
+        // Навешиваем триггеры действий
+        if(s3) {
+            if(document.getElementById('step3-trigger').value === 'hover') {
+                previewElement.onmouseenter = playAction;
+            } else {
+                previewElement.onclick = playAction;
+            }
+        }
+
+        // Запуск
+        if (s1) {
+            previewElement.className = `animate__animated animate__${document.getElementById('step1-effect').value}`;
+            previewElement.style.animationDuration = document.getElementById('step1-dur').value + 's';
+            previewElement.style.animationDelay = document.getElementById('step1-del').value + 's';
+            
+            previewElement.addEventListener('animationend', function handler(e) {
+                // Предотвращаем срабатывание от внутренних эффектов animate.css
+                e.stopPropagation();
+                previewElement.removeEventListener('animationend', handler);
+                startInfinite();
+            }, {once:true});
+        } else {
+            startInfinite();
         }
     }
 
+
+    // --- ГЕНЕРАЦИЯ КОДА ДЛЯ GENIALLY ---
     function generateCodeSnippet() {
-        const animName = animationSelect.value;
-        const trigger = triggerSelect.value;
-        const scale = imgScale.value / 100;
-        const glowFilter = glowToggle.checked ? `filter: drop-shadow(0 0 ${glowRadius.value}px ${glowColor.value});` : '';
-        const timings = `--animate-duration: ${animDuration.value}s; --animate-delay: ${animDelay.value}s;`;
-        
-        // ВАЖНО: Магия сидит здесь. Мы используем calc, чтобы 
-        // объединить "воздушную подушку" (75%) и Масштаб ползунка.
-        const visualBase = 0.75; // базовая "воздушная подушка"
-        const combinedScale = visualBase * scale;
+        const scale = document.getElementById('img-scale').value / 100;
+        const glow = document.getElementById('glow-toggle').checked ? `filter: drop-shadow(0 0 ${document.getElementById('glow-radius').value}px ${document.getElementById('glow-color').value});` : '';
+        const combinedScale = 0.75 * scale; // 75% - базовая воздушная подушка
+
+        // Собираем конфиг для JS внутри iframe
+        const cfg = {
+            s1: document.getElementById('step1-enable').checked,
+            s1c: document.getElementById('step1-effect').value,
+            s1dur: document.getElementById('step1-dur').value + 's',
+            s1del: document.getElementById('step1-del').value + 's',
+            
+            s2: document.getElementById('step2-enable').checked,
+            s2c: document.getElementById('step2-effect').value,
+            s2dur: document.getElementById('step2-dur').value + 's',
+            
+            s3: document.getElementById('step3-enable').checked,
+            s3tr: document.getElementById('step3-trigger').value,
+            s3c: document.getElementById('step3-effect').value,
+            s3dur: document.getElementById('step3-dur').value + 's',
+        };
+
+        // JS код, который будет управлять анимацией внутри Genially
+        const scriptLogic = `
+            const img = document.getElementById('el');
+            function inf(){
+                if(!${cfg.s2}) return;
+                img.className = 'gen-img animate__animated animate__${cfg.s2c} animate__infinite';
+                img.style.animationDuration = '${cfg.s2dur}';
+                img.style.animationDelay = '0s';
+            }
+            function act(){
+                if(!${cfg.s3}) return;
+                img.className = 'gen-img animate__animated animate__${cfg.s3c}';
+                img.style.animationDuration = '${cfg.s3dur}';
+                img.style.animationDelay = '0s';
+                if(!'${cfg.s3c}'.toLowerCase().includes('out')){
+                    img.addEventListener('animationend', function h(e){ e.stopPropagation(); img.removeEventListener('animationend',h); inf(); }, {once:true});
+                }
+            }
+            if(${cfg.s3}){ if('${cfg.s3tr}'==='hover') img.onmouseenter=act; else img.onclick=act; }
+            if(${cfg.s1}){
+                img.className = 'gen-img animate__animated animate__${cfg.s1c}';
+                img.style.animationDuration = '${cfg.s1dur}';
+                img.style.animationDelay = '${cfg.s1del}';
+                img.addEventListener('animationend', function h(e){ e.stopPropagation(); img.removeEventListener('animationend',h); inf(); }, {once:true});
+            } else { inf(); }
+        `;
 
         let innerHTML = `
             <style>
                 @import url('https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css');
-                body { margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; width: 100vw; height: 100vh; background: transparent; overflow: hidden; box-sizing: border-box; }
-                
-                .gen-img-wrap {
-                    display: flex; justify-content: center; align-items: center;
-                    width: calc(${combinedScale * 100}%); 
-                    height: calc(${combinedScale * 100}%);
-                }
-
-                .gen-img { 
-                    /* НАСИЛЬНО растягиваем картинку на весь визуальный размер */
-                    width: 100%; height: 100%; 
-                    object-fit: contain; /* сохраняем пропорции */
-                    cursor: pointer; 
-                    ${glowFilter} 
-                    ${timings} 
-                }
+                body { margin:0; padding:0; display:flex; justify-content:center; align-items:center; width:100vw; height:100vh; background:transparent; overflow:hidden;}
+                .wrap { display:flex; justify-content:center; align-items:center; width:calc(${combinedScale*100}%); height:calc(${combinedScale*100}%); }
+                .gen-img { width:100%; height:100%; object-fit:contain; cursor:pointer; ${glow} }
+            </style>
+            <div class="wrap"><img id="el" src="${currentImageSrc}" class="gen-img" /></div>
+            <script>${scriptLogic}<\/script>
         `;
-        if (trigger === 'hover') {
-            innerHTML += ` body:hover .gen-img { animation: ${animName} ${animDuration.value}s ease ${animDelay.value}s forwards; }\n`;
-        }
-        innerHTML += `</style>\n`;
-        innerHTML += `<div class="gen-img-wrap">`;
-        if (trigger === 'entrance') {
-            innerHTML += `<img src="${currentImageSrc}" class="gen-img animate__animated animate__${animName}" />\n`;
-        } else if (trigger === 'infinite') {
-            innerHTML += `<img src="${currentImageSrc}" class="gen-img animate__animated animate__${animName} animate__infinite" />\n`;
-        } else if (trigger === 'hover') {
-            innerHTML += `<img src="${currentImageSrc}" class="gen-img animate__animated" />\n`;
-        } else if (trigger === 'click') {
-            innerHTML += `<img src="${currentImageSrc}" class="gen-img" onclick="this.classList.remove('animate__animated', 'animate__${animName}'); void this.offsetWidth; this.classList.add('animate__animated', 'animate__${animName}');" />\n`;
-        }
-        innerHTML += `</div>`;
 
         const escapedHTML = innerHTML.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/'/g, "&#39;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-        return `<iframe style="width: 100%; height: 100%; border: none; background: transparent;" allowtransparency="true" srcdoc="${escapedHTML}"></iframe>`;
+        return `<iframe style="width:100%; height:100%; border:none; background:transparent;" allowtransparency="true" srcdoc="${escapedHTML}"></iframe>`;
     }
 
     function checkCodeSize() {
         if (!currentImageSrc) return;
+        const sLight = document.getElementById('status-light');
+        const sInfo = document.getElementById('code-size-info');
         
         if (document.querySelector('input[name="img-source"]:checked').value === 'url') {
-            statusLight.className = 'status-light light-green';
-            codeSizeInfo.innerText = 'URL: код легкий!';
-            codeSizeInfo.style.color = '#888';
-            return;
+            sLight.className = 'status-light light-green'; sInfo.innerText = 'URL: Легкий код!'; sInfo.style.color = '#00ff00'; return;
         }
 
-        const htmlSnippet = generateCodeSnippet();
-        const codeLength = htmlSnippet.length;
-        const MAX_SAFE_LENGTH = 12000; 
-
-        if (codeLength > MAX_SAFE_LENGTH) {
-            statusLight.className = 'status-light light-red';
-            codeSizeInfo.innerText = `Слишком тяжелая (${Math.round(codeLength/1024)} KB)! Уменьшите разрешение.`;
-            codeSizeInfo.style.color = '#ff4444';
+        const len = generateCodeSnippet().length;
+        if (len > 12000) {
+            sLight.className = 'status-light light-red'; sInfo.innerText = `Вес: ${Math.round(len/1024)}KB (Тяжелый! Уменьшите размер)`; sInfo.style.color = '#ff4444';
         } else {
-            statusLight.className = 'status-light light-green';
-            codeSizeInfo.innerText = `Всё отлично (${Math.round(codeLength/1024)} KB) - можно вставлять!`;
-            codeSizeInfo.style.color = '#888';
+            sLight.className = 'status-light light-green'; sInfo.innerText = `Вес: ${Math.round(len/1024)}KB (Можно копировать!)`; sInfo.style.color = '#00ff00';
         }
     }
 
-    resetBtn.addEventListener('click', () => {
-        triggerSelect.value = 'entrance'; animationSelect.value = 'bounce';
-        animDuration.value = 1; animDelay.value = 0; imgScale.value = 100;
-        glowToggle.checked = false; glowSettings.style.display = 'none';
-        glowColor.value = '#ff6600'; glowRadius.value = 15;
-        if(originalLoadedImage) {
-            imgQuality.value = 300;
-            document.getElementById('quality-val').innerText = '300px';
-            applyCompressionAndPreview();
-        }
-        updateLabels(); updatePreview();
-    });
-
-    copyBtn.addEventListener('click', () => {
+    document.getElementById('copy-btn').addEventListener('click', () => {
         if (!currentImageSrc) { alert("Сначала загрузите картинку!"); return; }
-        
-        const htmlSnippet = generateCodeSnippet();
-        
-        navigator.clipboard.writeText(htmlSnippet).then(() => {
-            const originalText = copyBtn.innerText;
-            copyBtn.innerText = "СКОПИРОВАНО!"; 
-            copyBtn.style.backgroundColor = "#fff"; 
-            copyBtn.style.color = "#ff6600";
-            setTimeout(() => { 
-                copyBtn.innerText = originalText; 
-                copyBtn.style.backgroundColor = ""; 
-                copyBtn.style.color = ""; 
-            }, 2000);
+        const btn = document.getElementById('copy-btn');
+        navigator.clipboard.writeText(generateCodeSnippet()).then(() => {
+            btn.innerText = "✓ СКОПИРОВАНО В БУФЕР"; btn.style.background = "#fff"; btn.style.color = "#ff6600";
+            setTimeout(() => { btn.innerText = "КОПИРОВАТЬ КОД"; btn.style.background = ""; btn.style.color = ""; }, 2000);
         });
     });
 </script>

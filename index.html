@@ -111,7 +111,9 @@
         #demo-indicator { display: none; color: #fff; background: var(--primary-color); padding: 5px 12px; border-radius: 15px; font-size: 11px; font-weight: bold; box-shadow: 0 0 10px rgba(255,102,0,0.5); }
         
         #preview-wrapper { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 20px; box-sizing: border-box;}
-        #preview-element { width: auto; height: auto; max-width: 75%; max-height: 75%; object-fit: contain; cursor: pointer; }
+        
+        /* ВАЖНО: Картинка всегда тянется на 100%, но не больше 75% рамки (авто-воздушная подушка) */
+        #preview-element { width: 100%; height: 100%; max-width: 75%; max-height: 75%; object-fit: contain; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -145,7 +147,8 @@
                     <span>Сжатие файла (Вес) <div id="status-light" class="status-light light-green"></div></span>
                     <span class="range-value" id="quality-val">300px</span>
                 </div>
-                <input type="range" id="img-quality" min="50" max="400" step="10" value="300">
+                <input type="range" id="img-quality" min="20" max="400" step="10" value="300">
+                <div id="code-size-info" style="font-size: 11px; color: #aaa; text-align: right; margin-top: 4px;">Ожидание...</div>
             </div>
             
             <div style="display: flex; align-items: center; gap: 8px; margin-top: 10px;">
@@ -219,7 +222,7 @@
                 <label for="chk-ext">5. Уход (Исчезновение)</label>
             </div>
             <div class="step-body">
-                <div style="font-size:10px; color:#888; margin-bottom:5px;">Сработает автоматически по таймеру с момента загрузки слайда.</div>
+                <div style="font-size:10px; color:#888; margin-bottom:5px;">Сработает автоматически по таймеру.</div>
                 <select id="sel-ext" class="anim-select"></select>
                 <div class="range-header">Длительность: <span class="range-value" id="dur-ext-val">1.0s</span></div>
                 <input type="range" id="dur-ext" min="0.2" max="4" step="0.1" value="1">
@@ -248,54 +251,32 @@
     // --- ПЕРЕВОД АНИМАЦИЙ НА РУССКИЙ ---
     const animGroups = {
         "Внимание (Акценты)": [
-            {v: "bounce", t: "Прыжок (Bounce)"},
-            {v: "flash", t: "Вспышка (Flash)"},
-            {v: "pulse", t: "Пульсация (Pulse)"},
-            {v: "rubberBand", t: "Резинка (RubberBand)"},
-            {v: "shakeX", t: "Тряска влево-вправо"},
-            {v: "shakeY", t: "Тряска вверх-вниз"},
-            {v: "headShake", t: "Покачивание головой"},
-            {v: "swing", t: "Раскачивание (Swing)"},
-            {v: "tada", t: "Та-дам! (Tada)"},
-            {v: "wobble", t: "Валкость (Wobble)"},
-            {v: "jello", t: "Желе (Jello)"},
-            {v: "heartBeat", t: "Сердцебиение"}
+            {v: "bounce", t: "Прыжок (Bounce)"}, {v: "flash", t: "Вспышка (Flash)"},
+            {v: "pulse", t: "Пульсация (Pulse)"}, {v: "rubberBand", t: "Резинка (RubberBand)"},
+            {v: "shakeX", t: "Тряска влево-вправо"}, {v: "shakeY", t: "Тряска вверх-вниз"},
+            {v: "headShake", t: "Покачивание головой"}, {v: "swing", t: "Раскачивание (Swing)"},
+            {v: "tada", t: "Та-дам! (Tada)"}, {v: "wobble", t: "Валкость (Wobble)"},
+            {v: "jello", t: "Желе (Jello)"}, {v: "heartBeat", t: "Сердцебиение"}
         ],
         "Появление (Вход)": [
-            {v: "bounceIn", t: "Упругое появление"},
-            {v: "bounceInDown", t: "Упругое падение сверху"},
-            {v: "bounceInLeft", t: "Упругий вылет слева"},
-            {v: "bounceInRight", t: "Упругий вылет справа"},
-            {v: "bounceInUp", t: "Упругий вылет снизу"},
-            {v: "fadeIn", t: "Плавное проявление"},
-            {v: "fadeInDown", t: "Проявление сверху"},
-            {v: "fadeInLeft", t: "Проявление слева"},
-            {v: "fadeInRight", t: "Проявление справа"},
-            {v: "fadeInUp", t: "Проявление снизу"},
-            {v: "flipInX", t: "Кувырок по горизонтали"},
-            {v: "flipInY", t: "Кувырок по вертикали"},
-            {v: "lightSpeedInRight", t: "Световой вылет справа"},
-            {v: "lightSpeedInLeft", t: "Световой вылет слева"},
-            {v: "rotateIn", t: "Появление с вращением"},
-            {v: "zoomIn", t: "Увеличение (Zoom in)"},
-            {v: "slideInUp", t: "Выезд снизу"},
-            {v: "slideInDown", t: "Выезд сверху"},
-            {v: "slideInLeft", t: "Выезд слева"},
-            {v: "slideInRight", t: "Выезд справа"}
+            {v: "bounceIn", t: "Упругое появление"}, {v: "bounceInDown", t: "Упругое падение сверху"},
+            {v: "bounceInLeft", t: "Упругий вылет слева"}, {v: "bounceInRight", t: "Упругий вылет справа"},
+            {v: "bounceInUp", t: "Упругий вылет снизу"}, {v: "fadeIn", t: "Плавное проявление"},
+            {v: "fadeInDown", t: "Проявление сверху"}, {v: "fadeInLeft", t: "Проявление слева"},
+            {v: "fadeInRight", t: "Проявление справа"}, {v: "fadeInUp", t: "Проявление снизу"},
+            {v: "flipInX", t: "Кувырок по горизонтали"}, {v: "flipInY", t: "Кувырок по вертикали"},
+            {v: "lightSpeedInRight", t: "Световой вылет справа"}, {v: "lightSpeedInLeft", t: "Световой вылет слева"},
+            {v: "rotateIn", t: "Появление с вращением"}, {v: "zoomIn", t: "Увеличение (Zoom in)"},
+            {v: "slideInUp", t: "Выезд снизу"}, {v: "slideInDown", t: "Выезд сверху"},
+            {v: "slideInLeft", t: "Выезд слева"}, {v: "slideInRight", t: "Выезд справа"}
         ],
         "Исчезновение (Выход)": [
-            {v: "bounceOut", t: "Упругое исчезновение"},
-            {v: "bounceOutDown", t: "Упругое падение вниз"},
-            {v: "fadeOut", t: "Плавное растворение"},
-            {v: "fadeOutDown", t: "Растворение вниз"},
-            {v: "flipOutX", t: "Кувырок-исчезновение (X)"},
-            {v: "flipOutY", t: "Кувырок-исчезновение (Y)"},
-            {v: "lightSpeedOutRight", t: "Световой уход справа"},
-            {v: "rotateOut", t: "Исчезновение с вращением"},
-            {v: "zoomOut", t: "Уменьшение (Zoom out)"},
-            {v: "slideOutDown", t: "Уезд вниз"},
-            {v: "slideOutUp", t: "Уезд вверх"},
-            {v: "hinge", t: "Отрыв и падение вниз"}
+            {v: "bounceOut", t: "Упругое исчезновение"}, {v: "bounceOutDown", t: "Упругое падение вниз"},
+            {v: "fadeOut", t: "Плавное растворение"}, {v: "fadeOutDown", t: "Растворение вниз"},
+            {v: "flipOutX", t: "Кувырок-исчезновение (X)"}, {v: "flipOutY", t: "Кувырок-исчезновение (Y)"},
+            {v: "lightSpeedOutRight", t: "Световой уход справа"}, {v: "rotateOut", t: "Исчезновение с вращением"},
+            {v: "zoomOut", t: "Уменьшение (Zoom out)"}, {v: "slideOutDown", t: "Уезд вниз"},
+            {v: "slideOutUp", t: "Уезд вверх"}, {v: "hinge", t: "Отрыв и падение вниз"}
         ]
     };
 
@@ -355,7 +336,6 @@
 
     function triggerDemo(step) {
         if(!currentSrc || !document.getElementById(`chk-${step}`).checked) return;
-        
         const ind = document.getElementById('demo-indicator');
         const selectEl = document.getElementById(`sel-${step}`);
         ind.innerText = 'Тест: ' + selectEl.options[selectEl.selectedIndex].text;
@@ -364,8 +344,7 @@
         const eff = selectEl.value;
         const dur = document.getElementById(`dur-${step}`).value + 's';
         
-        previewEl.className = '';
-        void previewEl.offsetWidth; 
+        previewEl.className = ''; void previewEl.offsetWidth; 
         
         const isInf = (step === 'inf' || step === 'hov');
         previewEl.className = `animate__animated animate__${eff}` + (isInf ? ' animate__infinite' : '');
@@ -377,14 +356,10 @@
         if(!isInf) {
             previewEl.addEventListener('animationend', function h() {
                 previewEl.removeEventListener('animationend', h);
-                ind.style.display = 'none';
-                playPreviewSequence(); 
+                ind.style.display = 'none'; playPreviewSequence(); 
             }, {once:true});
         } else {
-            demoTimer = setTimeout(() => { 
-                ind.style.display = 'none'; 
-                playPreviewSequence(); 
-            }, 2500);
+            demoTimer = setTimeout(() => { ind.style.display = 'none'; playPreviewSequence(); }, 2500);
         }
     }
 
@@ -423,16 +398,26 @@
         reader.readAsDataURL(file);
     });
 
+    // АГРЕССИВНОЕ СЖАТИЕ
     function applyCompression() {
         if (!originalImg) return;
         const canvas = document.createElement('canvas');
-        const tgtWidth = parseInt(document.getElementById('img-quality').value); 
+        const sliderVal = parseInt(document.getElementById('img-quality').value); 
         let w = originalImg.width, h = originalImg.height;
-        if (w > tgtWidth) { h *= tgtWidth / w; w = tgtWidth; }
         
+        // Жестко сжимаем ширину и высоту
+        if (w > sliderVal) { 
+            h = Math.round(h * (sliderVal / w)); 
+            w = sliderVal; 
+        }
+
         canvas.width = w; canvas.height = h;
         canvas.getContext('2d').drawImage(originalImg, 0, 0, w, h);
-        currentSrc = canvas.toDataURL('image/webp', 0.85);
+        
+        // Чем меньше ползунок, тем хуже качество самого WebP (доп. экономия места)
+        const webpQuality = 0.1 + ((sliderVal - 20) / 380) * 0.8;
+        currentSrc = canvas.toDataURL('image/webp', webpQuality);
+        
         applyVisuals(); checkCodeSize(); playPreviewSequence();
     }
 
@@ -446,7 +431,6 @@
     function applyVisuals() {
         if(!currentSrc) return;
         previewEl.src = currentSrc;
-        
         if (document.getElementById('glow-toggle').checked) {
             previewEl.style.filter = `drop-shadow(0 0 ${document.getElementById('glow-radius').value}px ${document.getElementById('glow-color').value})`;
         } else {
@@ -469,8 +453,7 @@
         clearTimeout(exitTimer);
         void previewEl.offsetWidth; 
         
-        const cfg = getCfg();
-        let state = 'init';
+        const cfg = getCfg(); let state = 'init';
 
         function playAnim(effect, dur, del, isInf, onEnd) {
             previewEl.className = `animate__animated animate__${effect}` + (isInf ? ' animate__infinite' : '');
@@ -546,12 +529,12 @@
             if(${c.eOn}){ st='ent'; p('${c.eEff}','${c.eDur}','${c.eDel}',false,inf); } else { inf(); }
         `;
 
-        // Исправленная переменная currentSrc
+        // Встроенная воздушная подушка! Картинка растянется, но оставит 25% места для прыжков
         const html = `
             <style>
                 @import url('https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css');
                 body{margin:0;padding:0;display:flex;justify-content:center;align-items:center;width:100vw;height:100vh;background:transparent;overflow:hidden;}
-                .gen-img{width:auto;height:auto;max-width:75%;max-height:75%;object-fit:contain;cursor:pointer;${gl}}
+                .gen-img{width:100%;height:100%;max-width:75%;max-height:75%;object-fit:contain;cursor:pointer;${gl}}
             </style>
             <img id="el" src="${currentSrc}" class="gen-img"/>
             <script>${script}<\/script>
@@ -563,38 +546,35 @@
         if (!currentSrc) return;
         const l = document.getElementById('status-light'), i = document.getElementById('code-size-info');
         if (document.querySelector('input[name="img-source"]:checked').value === 'url') {
-            l.className = 'status-light light-green'; i.innerText = ''; return;
+            l.className = 'status-light light-green'; i.innerText = 'URL: Идеальный вес!'; i.style.color = '#00ff00'; return;
         }
         
         try {
             const len = genCode().length;
-            if (len > 12000) {
-                l.className = 'status-light light-red'; i.innerText = `(${Math.round(len/1024)}KB) Уменьшите сжатие!`; i.style.color = '#ff4444';
+            const kb = (len / 1024).toFixed(1);
+            // Лимит увеличен до 15 КБ (максимум Genially)
+            if (len > 15000) {
+                l.className = 'status-light light-red'; i.innerText = `Вес: ${kb}KB (Слишком тяжелая!)`; i.style.color = '#ff4444';
             } else {
-                l.className = 'status-light light-green'; i.innerText = `(${Math.round(len/1024)}KB) OK!`; i.style.color = '#00ff00';
+                l.className = 'status-light light-green'; i.innerText = `Вес: ${kb}KB (Отлично!)`; i.style.color = '#00ff00';
             }
         } catch (e) {
             console.error(e);
         }
     }
 
-    // --- ЖЕЛЕЗОБЕТОННОЕ КОПИРОВАНИЕ ---
+    // --- НАДЕЖНОЕ КОПИРОВАНИЕ ---
     document.getElementById('copy-btn').addEventListener('click', async () => {
-        if (!currentSrc) { alert("Сначала добавьте картинку!"); return; }
+        if (!currentSrc) { alert("Сначала загрузите картинку!"); return; }
         
         const btn = document.getElementById('copy-btn');
         let codeToCopy = '';
         
-        try {
-            codeToCopy = genCode();
-        } catch (e) {
-            alert("Ошибка при генерации кода. Обновите страницу.");
-            console.error(e);
-            return;
-        }
+        try { codeToCopy = genCode(); } 
+        catch (e) { alert("Ошибка при генерации кода."); return; }
 
         const successCopy = () => {
-            btn.innerText = "✓ КОД В БУФЕРЕ"; 
+            btn.innerText = "✓ КОД СКОПИРОВАН"; 
             btn.style.background = "#fff"; 
             btn.style.color = "#ff6600";
             setTimeout(() => { 
@@ -605,11 +585,9 @@
         };
 
         try {
-            // Современный метод
             await navigator.clipboard.writeText(codeToCopy);
             successCopy();
         } catch (err) {
-            // Если браузер блокирует - старый надежный метод
             try {
                 const textArea = document.createElement("textarea");
                 textArea.value = codeToCopy;
@@ -619,8 +597,7 @@
                 document.body.removeChild(textArea);
                 successCopy();
             } catch (err2) {
-                alert("Ошибка! Ваш браузер блокирует автоматическое копирование.");
-                console.error(err2);
+                alert("Ошибка копирования. Ваш браузер блокирует буфер обмена.");
             }
         }
     });

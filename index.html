@@ -28,7 +28,7 @@
             overflow: hidden;
         }
 
-        /* --- Брендинг и Логотип --- */
+        /* --- Брендинг --- */
         .main-header {
             display: flex;
             align-items: center;
@@ -144,7 +144,6 @@
         .checkbox-group { display: flex; align-items: center; gap: 10px; margin-top: 5px;}
         input[type="checkbox"] { accent-color: var(--primary-color); width: 15px; height: 15px; margin: 0;}
 
-        /* Стили для светофора */
         .status-light {
             width: 12px;
             height: 12px;
@@ -196,10 +195,7 @@
             overflow: hidden;
         }
         
-        .preview-area.dragover {
-            background-color: rgba(255, 102, 0, 0.1);
-            border: 2px dashed var(--primary-color);
-        }
+        .preview-area.dragover { background-color: rgba(255, 102, 0, 0.1); border: 2px dashed var(--primary-color); }
 
         .preview-header {
             position: absolute;
@@ -235,6 +231,7 @@
             object-fit: contain;
             transition: filter 0.3s, transform 0.3s;
             transform-origin: center;
+            image-rendering: -webkit-optimize-contrast; /* Улучшает резкость при растягивании */
         }
     </style>
 </head>
@@ -246,7 +243,7 @@
     </a>
     <div class="header-text">
         <div class="author-name">Светлана Быкова</div>
-        <div class="project-title">Шкатулка математических интерактивов</div>
+        <div class="project-title">Шкатулка интерактивов</div>
     </div>
 </header>
 
@@ -267,12 +264,12 @@
         <div class="form-group" id="compression-container" style="display: none; border: 1px dashed var(--primary-color); padding: 10px; background: rgba(255,102,0,0.05);">
             <div class="range-header">
                 <label style="display: flex; align-items: center; gap: 8px;">
-                    Качество картинки
+                    Размер в пикселях (вес)
                     <div id="status-light" class="status-light light-green"></div>
                 </label>
-                <span class="range-value" id="quality-val">70%</span>
+                <span class="range-value" id="quality-val">300px</span>
             </div>
-            <input type="range" id="img-quality" min="0.05" max="1" step="0.05" value="0.7">
+            <input type="range" id="img-quality" min="50" max="400" step="10" value="300">
             <div id="code-size-info" style="font-size: 11px; color: #aaa; text-align: right; margin-top: 4px;">Загрузите файл...</div>
         </div>
 
@@ -393,9 +390,8 @@
     const resetBtn = document.getElementById('reset-btn');
 
     let currentImageSrc = '';
-    let originalLoadedImage = null; // Храним оригинал для пересжатия
+    let originalLoadedImage = null; 
 
-    // Переключение источника
     sourceRadios.forEach(radio => {
         radio.addEventListener('change', (e) => {
             if (e.target.value === 'file') {
@@ -421,13 +417,12 @@
         }
     });
 
-    // Изменение качества ползунком
+    // Обработка ползунка РАЗМЕРА ПИКСЕЛЕЙ
     imgQuality.addEventListener('input', (e) => {
-        document.getElementById('quality-val').innerText = Math.round(e.target.value * 100) + '%';
+        document.getElementById('quality-val').innerText = e.target.value + 'px';
         applyCompressionAndPreview();
     });
 
-    // Логика загрузки оригинала
     function handleFile(file) {
         if (!file || !file.type.startsWith('image/')) return;
         const reader = new FileReader();
@@ -441,6 +436,10 @@
                 imageUrl.style.display = 'none';
                 compressionContainer.style.display = 'flex';
                 
+                // Сбрасываем ползунок размера на оптимальные 300px при новой загрузке
+                imgQuality.value = 300;
+                document.getElementById('quality-val').innerText = '300px';
+                
                 applyCompressionAndPreview();
             }
             img.src = event.target.result;
@@ -448,18 +447,24 @@
         reader.readAsDataURL(file);
     }
 
-    // Применение сжатия
+    // Жесткое уменьшение размера картинки
     function applyCompressionAndPreview() {
         if (!originalLoadedImage) return;
         
         const canvas = document.createElement('canvas');
-        const MAX_WIDTH = 500; 
+        const targetWidth = parseInt(imgQuality.value); 
+        
         let width = originalLoadedImage.width;
         let height = originalLoadedImage.height;
         
-        if (width > MAX_WIDTH) { 
-            height *= MAX_WIDTH / width; 
-            width = MAX_WIDTH; 
+        // Меняем размер пропорционально, если картинка больше ползунка
+        if (width > targetWidth) {
+            height *= targetWidth / width;
+            width = targetWidth;
+        } else {
+            // Если оригинальная картинка меньше ползунка, оставляем ее родной размер
+            width = originalLoadedImage.width;
+            height = originalLoadedImage.height;
         }
         
         canvas.width = width; 
@@ -467,9 +472,8 @@
         const ctx = canvas.getContext('2d');
         ctx.drawImage(originalLoadedImage, 0, 0, width, height);
         
-        const quality = parseFloat(imgQuality.value);
-        // Используем WebP - он сжимает размер, но сохраняет прозрачность фона!
-        currentImageSrc = canvas.toDataURL('image/webp', quality);
+        // Оставляем постоянное хорошее качество WebP, так как вес падает за счет уменьшения разрешения
+        currentImageSrc = canvas.toDataURL('image/webp', 0.85);
         
         previewElement.src = currentImageSrc;
         updatePreview();
@@ -541,7 +545,6 @@
         }
     }
 
-    // Главная функция генерации кода (чтобы проверять длину)
     function generateCodeSnippet() {
         const animName = animationSelect.value;
         const trigger = triggerSelect.value;
@@ -580,11 +583,9 @@
         return `<iframe style="width: 100%; height: 100%; border: none; background: transparent;" allowtransparency="true" srcdoc="${escapedHTML}"></iframe>`;
     }
 
-    // Проверка веса кода для светофора
     function checkCodeSize() {
         if (!currentImageSrc) return;
         
-        // Если выбрана загрузка по ссылке - код всегда идеальный
         if (document.querySelector('input[name="img-source"]:checked').value === 'url') {
             statusLight.className = 'status-light light-green';
             codeSizeInfo.innerText = 'URL: код легкий!';
@@ -594,11 +595,11 @@
 
         const htmlSnippet = generateCodeSnippet();
         const codeLength = htmlSnippet.length;
-        const MAX_SAFE_LENGTH = 12000; // Лимит Genially
+        const MAX_SAFE_LENGTH = 12000; 
 
         if (codeLength > MAX_SAFE_LENGTH) {
             statusLight.className = 'status-light light-red';
-            codeSizeInfo.innerText = `Слишком тяжелая (${Math.round(codeLength/1024)} KB)! Genially не примет. Уменьшите качество.`;
+            codeSizeInfo.innerText = `Слишком тяжелая (${Math.round(codeLength/1024)} KB)! Уменьшите размер.`;
             codeSizeInfo.style.color = '#ff4444';
         } else {
             statusLight.className = 'status-light light-green';
@@ -613,8 +614,8 @@
         glowToggle.checked = false; glowSettings.style.display = 'none';
         glowColor.value = '#ff6600'; glowRadius.value = 15;
         if(originalLoadedImage) {
-            imgQuality.value = 0.7;
-            document.getElementById('quality-val').innerText = '70%';
+            imgQuality.value = 300;
+            document.getElementById('quality-val').innerText = '300px';
             applyCompressionAndPreview();
         }
         updateLabels(); updatePreview();
